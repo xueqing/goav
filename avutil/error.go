@@ -14,11 +14,13 @@ package avutil
 import "C"
 import "errors"
 
+// error code
 const (
 	AvErrorEOF    = -('E' | ('O' << 8) | ('F' << 16) | (' ' << 24))
 	AvErrorEAGAIN = -11
 )
 
+// ErrorFromCode Wrap erro code
 func ErrorFromCode(code int) error {
 	if code >= 0 {
 		return nil

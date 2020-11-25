@@ -9,7 +9,7 @@ package avfilter
 */
 import "C"
 
-//Get a filter definition matching the given name.
+// AvfilterGetByName Get a filter definition matching the given name.
 func AvfilterGetByName(n string) *Filter {
 	return (*Filter)(C.avfilter_get_by_name(C.CString(n)))
 }

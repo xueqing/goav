@@ -84,12 +84,12 @@ func main() {
 	// Find the first video stream
 	for i := 0; i < int(pFormatContext.NbStreams()); i++ {
 		switch pFormatContext.Streams()[i].CodecParameters().AvCodecGetType() {
-		case avformat.AVMEDIA_TYPE_VIDEO:
+		case avformat.AvmediaTypeVideo:
 
 			// Get a pointer to the codec context for the video stream
 			pCodecCtxOrig := pFormatContext.Streams()[i].Codec()
 			// Find the decoder for the video stream
-			pCodec := avcodec.AvcodecFindDecoder(avcodec.CodecId(pCodecCtxOrig.GetCodecId()))
+			pCodec := avcodec.AvcodecFindDecoder(avcodec.CodecID(pCodecCtxOrig.GetCodecID()))
 			if pCodec == nil {
 				fmt.Println("Unsupported codec!")
 				os.Exit(1)
@@ -118,15 +118,15 @@ func main() {
 			}
 
 			// Determine required buffer size and allocate buffer
-			numBytes := uintptr(avutil.AvImageGetBufferSize(avutil.PixelFormat(avcodec.AV_PIX_FMT_RGB24), pCodecCtx.Width(),
+			numBytes := uintptr(avutil.AvImageGetBufferSize(avutil.PixelFormat(avcodec.AvPixFmtRgb24), pCodecCtx.Width(),
 				pCodecCtx.Height(), 1))
 			buffer := avutil.AvMalloc(numBytes)
 
 			// Assign appropriate parts of buffer to image planes in pFrameRGB
 			avp := (*avcodec.Picture)(unsafe.Pointer(pFrameRGB))
-			avp.AvpictureFill((*uint8)(buffer), avcodec.AV_PIX_FMT_RGB24, pCodecCtx.Width(), pCodecCtx.Height())
+			avp.AvpictureFill((*uint8)(buffer), avcodec.AvPixFmtRgb24, pCodecCtx.Width(), pCodecCtx.Height())
 			// if ret := avutil.AvImageFillArrays(avutil.Data(pFrameRGB), avutil.Linesize(pFrameRGB), (*uint8)(buffer),
-			// 	avutil.PixelFormat(avcodec.AV_PIX_FMT_RGB24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
+			// 	avutil.PixelFormat(avcodec.AvPixFmtRgb24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
 			// 	fmt.Printf("Error while filling an image: %s\n", avutil.ErrorFromCode(ret))
 			// }
 
@@ -137,8 +137,8 @@ func main() {
 				(swscale.PixelFormat)(pCodecCtx.PixFmt()),
 				pCodecCtx.Width(),
 				pCodecCtx.Height(),
-				avcodec.AV_PIX_FMT_RGB24,
-				avcodec.SWS_BILINEAR,
+				avcodec.AvPixFmtRgb24,
+				avcodec.SwsBilinear,
 				nil,
 				nil,
 				nil,

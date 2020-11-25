@@ -16,8 +16,9 @@ package avformat
 //#include <libavformat/avio.h>
 import "C"
 
+// AVIO_FLAG_XXX
 const (
-	AVIO_FLAG_READ       = int(C.AVIO_FLAG_READ)
-	AVIO_FLAG_WRITE      = int(C.AVIO_FLAG_WRITE)
-	AVIO_FLAG_READ_WRITE = int(C.AVIO_FLAG_READ_WRITE)
+	AvioFlagRead      = int(C.AVIO_FLAG_READ)
+	AvioFlagWrite     = int(C.AVIO_FLAG_WRITE)
+	AvioFlagReadWrite = int(C.AVIO_FLAG_READ_WRITE)
 )

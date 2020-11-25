@@ -9,22 +9,22 @@ package avdevice
 */
 import "C"
 
-//Audio input devices iterator.
+// AvInputAudioDeviceNext Audio input devices iterator.
 func (d *InputFormat) AvInputAudioDeviceNext() *InputFormat {
 	return (*InputFormat)(C.av_input_audio_device_next((*C.struct_AVInputFormat)(d)))
 }
 
-//Video input devices iterator.
+// AvInputVideoDeviceNext Video input devices iterator.
 func (d *InputFormat) AvInputVideoDeviceNext() *InputFormat {
 	return (*InputFormat)(C.av_input_video_device_next((*C.struct_AVInputFormat)(d)))
 }
 
-//Audio output devices iterator.
+// AvOutputAudioDeviceNext Audio output devices iterator.
 func (d *OutputFormat) AvOutputAudioDeviceNext() *OutputFormat {
 	return (*OutputFormat)(C.av_output_audio_device_next((*C.struct_AVOutputFormat)(d)))
 }
 
-//Video output devices iterator.
+// AvOutputVideoDeviceNext Video output devices iterator.
 func (d *OutputFormat) AvOutputVideoDeviceNext() *OutputFormat {
 	return (*OutputFormat)(C.av_output_video_device_next((*C.struct_AVOutputFormat)(d)))
 }

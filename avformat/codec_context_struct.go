@@ -22,111 +22,138 @@ import (
 	"github.com/xueqing/goav/avcodec"
 )
 
-func (cctxt *CodecContext) Type() MediaType {
-	return MediaType(cctxt.codec_type)
+// Type Return codec_type as MediaType
+func (cctx *CodecContext) Type() MediaType {
+	return MediaType(cctx.codec_type)
 }
 
-func (cctxt *CodecContext) SetBitRate(br int64) {
-	cctxt.bit_rate = C.int64_t(br)
+// SetBitRate Set bit_rate
+func (cctx *CodecContext) SetBitRate(br int64) {
+	cctx.bit_rate = C.int64_t(br)
 }
 
-func (cctxt *CodecContext) GetCodecId() CodecId {
-	return CodecId(cctxt.codec_id)
+// GetCodecID Return codec_id
+func (cctx *CodecContext) GetCodecID() CodecID {
+	return CodecID(cctx.codec_id)
 }
 
-func (cctxt *CodecContext) SetCodecId(codecId CodecId) {
-	cctxt.codec_id = C.enum_AVCodecID(codecId)
+// SetCodecID Set codec_id
+func (cctx *CodecContext) SetCodecID(codecID CodecID) {
+	cctx.codec_id = C.enum_AVCodecID(codecID)
 }
 
-func (cctxt *CodecContext) GetCodecType() MediaType {
-	return MediaType(cctxt.codec_type)
+// GetCodecType Return codec_type
+func (cctx *CodecContext) GetCodecType() MediaType {
+	return MediaType(cctx.codec_type)
 }
 
-func (cctxt *CodecContext) SetCodecType(ctype MediaType) {
-	cctxt.codec_type = C.enum_AVMediaType(ctype)
+// SetCodecType Set codec_type
+func (cctx *CodecContext) SetCodecType(ctype MediaType) {
+	cctx.codec_type = C.enum_AVMediaType(ctype)
 }
 
-func (cctxt *CodecContext) GetTimeBase() avcodec.Rational {
-	return newRational(cctxt.time_base)
+// GetTimeBase Return time_base
+func (cctx *CodecContext) GetTimeBase() avcodec.Rational {
+	return newRational(cctx.time_base)
 }
 
-func (cctxt *CodecContext) SetTimeBase(timeBase avcodec.Rational) {
-	cctxt.time_base.num = C.int(timeBase.Num())
-	cctxt.time_base.den = C.int(timeBase.Den())
+// SetTimeBase Set codec_type
+func (cctx *CodecContext) SetTimeBase(timeBase avcodec.Rational) {
+	cctx.time_base.num = C.int(timeBase.Num())
+	cctx.time_base.den = C.int(timeBase.Den())
 }
 
+// GetWidth Return width
 func (cctx *CodecContext) GetWidth() int {
 	return int(cctx.width)
 }
 
+// SetWidth Set width
 func (cctx *CodecContext) SetWidth(w int) {
 	cctx.width = C.int(w)
 }
 
+// GetHeight Return height
 func (cctx *CodecContext) GetHeight() int {
 	return int(cctx.height)
 }
 
+// SetHeight Set height
 func (cctx *CodecContext) SetHeight(h int) {
 	cctx.height = C.int(h)
 }
 
+// GetPixelFormat Return pix_fmt
 func (cctx *CodecContext) GetPixelFormat() avcodec.PixelFormat {
 	return avcodec.PixelFormat(C.int(cctx.pix_fmt))
 }
 
+// SetPixelFormat Set pix_fmt
 func (cctx *CodecContext) SetPixelFormat(fmt avcodec.PixelFormat) {
 	cctx.pix_fmt = C.enum_AVPixelFormat(C.int(fmt))
 }
 
+// GetFlags Return flags
 func (cctx *CodecContext) GetFlags() int {
 	return int(cctx.flags)
 }
 
+// SetFlags Set flags
 func (cctx *CodecContext) SetFlags(flags int) {
 	cctx.flags = C.int(flags)
 }
 
+// GetMeRange Return me_range
 func (cctx *CodecContext) GetMeRange() int {
 	return int(cctx.me_range)
 }
 
+// SetMeRange Set me_range
 func (cctx *CodecContext) SetMeRange(r int) {
 	cctx.me_range = C.int(r)
 }
 
+// GetMaxQDiff Return max_qdiff
 func (cctx *CodecContext) GetMaxQDiff() int {
 	return int(cctx.max_qdiff)
 }
 
+// SetMaxQDiff Set max_qdiff
 func (cctx *CodecContext) SetMaxQDiff(v int) {
 	cctx.max_qdiff = C.int(v)
 }
 
+// GetQMin Return qmin
 func (cctx *CodecContext) GetQMin() int {
 	return int(cctx.qmin)
 }
 
+// SetQMin Set qmin
 func (cctx *CodecContext) SetQMin(v int) {
 	cctx.qmin = C.int(v)
 }
 
+// GetQMax Return qmax
 func (cctx *CodecContext) GetQMax() int {
 	return int(cctx.qmax)
 }
 
+// SetQMax Set qmax
 func (cctx *CodecContext) SetQMax(v int) {
 	cctx.qmax = C.int(v)
 }
 
+// GetQCompress Return qcompress
 func (cctx *CodecContext) GetQCompress() float32 {
 	return float32(cctx.qcompress)
 }
 
+// SetQCompress Set qcompress
 func (cctx *CodecContext) SetQCompress(v float32) {
 	cctx.qcompress = C.float(v)
 }
 
+// GetExtraData Return extradata
 func (cctx *CodecContext) GetExtraData() []byte {
 	header := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cctx.extradata)),
@@ -137,13 +164,14 @@ func (cctx *CodecContext) GetExtraData() []byte {
 	return *((*[]byte)(unsafe.Pointer(&header)))
 }
 
+// SetExtraData Return data
 func (cctx *CodecContext) SetExtraData(data []byte) {
 	header := (*reflect.SliceHeader)(unsafe.Pointer(&data))
-
 	cctx.extradata = (*C.uint8_t)(unsafe.Pointer(header.Data))
 	cctx.extradata_size = C.int(header.Len)
 }
 
+// Release ...
 func (cctx *CodecContext) Release() {
 	C.avcodec_close((*C.struct_AVCodecContext)(unsafe.Pointer(cctx)))
 	C.av_freep(unsafe.Pointer(cctx))

@@ -10,20 +10,22 @@ import (
 	"unsafe"
 )
 
-//Return a value representing the fourCC code associated to the pixel format pix_fmt, or 0 if no associated fourCC code can be found.
+// AvcodecPixFmtToCodecTag Return a value representing the fourCC code associated to the pixel format pix_fmt, or 0 if no associated fourCC code can be found.
 func (p PixelFormat) AvcodecPixFmtToCodecTag() uint {
 	return uint(C.avcodec_pix_fmt_to_codec_tag((C.enum_AVPixelFormat)(p)))
 }
 
+// AvcodecGetPixFmtLoss see av_get_pix_fmt_loss()
 func (p PixelFormat) AvcodecGetPixFmtLoss(f PixelFormat, a int) int {
 	return int(C.avcodec_get_pix_fmt_loss((C.enum_AVPixelFormat)(p), (C.enum_AVPixelFormat)(f), C.int(a)))
 }
 
-//Find the best pixel format to convert to given a certain source pixel format.
+// AvcodecFindBestPixFmtOfList Find the best pixel format to convert to given a certain source pixel format.
 func (p *PixelFormat) AvcodecFindBestPixFmtOfList(s PixelFormat, a int, l *int) PixelFormat {
 	return (PixelFormat)(C.avcodec_find_best_pix_fmt_of_list((*C.enum_AVPixelFormat)(p), (C.enum_AVPixelFormat)(s), C.int(a), (*C.int)(unsafe.Pointer(l))))
 }
 
+// AvcodecFindBestPixFmtOf2 see av_find_best_pix_fmt_of_2()
 func (p PixelFormat) AvcodecFindBestPixFmtOf2(f2, s PixelFormat, a int, l *int) PixelFormat {
 	return (PixelFormat)(C.avcodec_find_best_pix_fmt_of_2((C.enum_AVPixelFormat)(p), (C.enum_AVPixelFormat)(f2), (C.enum_AVPixelFormat)(s), C.int(a), (*C.int)(unsafe.Pointer(l))))
 }

@@ -21,16 +21,18 @@ type (
 	DictionaryEntry C.struct_AVDictionaryEntry
 )
 
+// AV_DICT_xxx
 const (
-	AV_DICT_MATCH_CASE      = int(C.AV_DICT_MATCH_CASE)
-	AV_DICT_IGNORE_SUFFIX   = int(C.AV_DICT_IGNORE_SUFFIX)
-	AV_DICT_DONT_STRDUP_KEY = int(C.AV_DICT_DONT_STRDUP_KEY)
-	AV_DICT_DONT_STRDUP_VAL = int(C.AV_DICT_DONT_STRDUP_VAL)
-	AV_DICT_DONT_OVERWRITE  = int(C.AV_DICT_DONT_OVERWRITE)
-	AV_DICT_APPEND          = int(C.AV_DICT_APPEND)
-	AV_DICT_MULTIKEY        = int(C.AV_DICT_MULTIKEY)
+	AvDictMatchCase     = int(C.AV_DICT_MATCH_CASE)
+	AvDictIgnoreSuffix  = int(C.AV_DICT_IGNORE_SUFFIX)
+	AvDictDontStrdupKey = int(C.AV_DICT_DONT_STRDUP_KEY)
+	AvDictDontStrdupVal = int(C.AV_DICT_DONT_STRDUP_VAL)
+	AvDictDontOverwrite = int(C.AV_DICT_DONT_OVERWRITE)
+	AvDictAppend        = int(C.AV_DICT_APPEND)
+	AvDictMultikey      = int(C.AV_DICT_MULTIKEY)
 )
 
+// AvDictGet Get a dictionary entry with matching key.
 func (d *Dictionary) AvDictGet(key string, prev *DictionaryEntry, flags int) *DictionaryEntry {
 	Ckey := C.CString(key)
 	defer C.free(unsafe.Pointer(Ckey))
@@ -43,10 +45,12 @@ func (d *Dictionary) AvDictGet(key string, prev *DictionaryEntry, flags int) *Di
 	))
 }
 
+// AvDictCount Get number of entries in dictionary.
 func (d *Dictionary) AvDictCount() int {
 	return int(C.av_dict_count((*C.struct_AVDictionary)(d)))
 }
 
+// AvDictSet Set the given entry in *pm, overwriting an existing entry.
 func (d *Dictionary) AvDictSet(key, value string, flags int) int {
 	Ckey := C.CString(key)
 	defer C.free(unsafe.Pointer(Ckey))
@@ -62,6 +66,7 @@ func (d *Dictionary) AvDictSet(key, value string, flags int) int {
 	))
 }
 
+// AvDictSetInt Convenience wrapper for av_dict_set that converts the value to a string and stores it.
 func (d *Dictionary) AvDictSetInt(key string, value int64, flags int) int {
 	Ckey := C.CString(key)
 	defer C.free(unsafe.Pointer(Ckey))
@@ -74,25 +79,27 @@ func (d *Dictionary) AvDictSetInt(key string, value int64, flags int) int {
 	))
 }
 
-func (d *Dictionary) AvDictParseString(str, key_val_sep, pairs_sep string, flags int) int {
+// AvDictParseString Parse the key/value pairs list and add the parsed entries to a dictionary.
+func (d *Dictionary) AvDictParseString(str, keyValSep, pairsSep string, flags int) int {
 	Cstr := C.CString(str)
 	defer C.free(unsafe.Pointer(Cstr))
 
-	Ckey_val_sep := C.CString(key_val_sep)
-	defer C.free(unsafe.Pointer(Ckey_val_sep))
+	cKeyValSep := C.CString(keyValSep)
+	defer C.free(unsafe.Pointer(cKeyValSep))
 
-	Cpairs_sep := C.CString(pairs_sep)
-	defer C.free(unsafe.Pointer(Cpairs_sep))
+	cPairsSep := C.CString(pairsSep)
+	defer C.free(unsafe.Pointer(cPairsSep))
 
 	return int(C.av_dict_parse_string(
 		(**C.struct_AVDictionary)(unsafe.Pointer(&d)),
 		Cstr,
-		Ckey_val_sep,
-		Cpairs_sep,
+		cKeyValSep,
+		cPairsSep,
 		C.int(flags),
 	))
 }
 
+// AvDictCopy Copy entries from one AVDictionary struct into another.
 func (d *Dictionary) AvDictCopy(src *Dictionary, flags int) int {
 	return int(C.av_dict_copy(
 		(**C.struct_AVDictionary)(unsafe.Pointer(&d)),
@@ -101,18 +108,20 @@ func (d *Dictionary) AvDictCopy(src *Dictionary, flags int) int {
 	))
 }
 
+// AvDictFree Free all the memory allocated for an AVDictionary struct and all keys and values.
 func (d *Dictionary) AvDictFree() {
 	C.av_dict_free((**C.struct_AVDictionary)(unsafe.Pointer(&d)))
 }
 
-func (d *Dictionary) AvDictGetString(key_val_sep, pairs_sep byte) (int, string) {
+// AvDictGetString Get dictionary entries as a string.
+func (d *Dictionary) AvDictGetString(keyValSep, pairsSep byte) (int, string) {
 	var Cbuf *C.char
 
 	ret := int(C.av_dict_get_string(
 		(*C.struct_AVDictionary)(d),
 		(**C.char)(&Cbuf),
-		C.char(key_val_sep),
-		C.char(pairs_sep),
+		C.char(keyValSep),
+		C.char(pairsSep),
 	))
 
 	var buf string
@@ -124,10 +133,12 @@ func (d *Dictionary) AvDictGetString(key_val_sep, pairs_sep byte) (int, string) 
 	return ret, buf
 }
 
+// Key Return key
 func (d *DictionaryEntry) Key() string {
 	return C.GoString(d.key)
 }
 
+// Value Return value
 func (d *DictionaryEntry) Value() string {
 	return C.GoString(d.value)
 }

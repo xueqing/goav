@@ -10,22 +10,25 @@ package avutil
 */
 import "C"
 
+// AV_LOG_xxx
 const (
-	AV_LOG_QUIET   = -8
-	AV_LOG_PANIC   = 0
-	AV_LOG_FATAL   = 8
-	AV_LOG_ERROR   = 16
-	AV_LOG_WARNING = 24
-	AV_LOG_INFO    = 32
-	AV_LOG_VERBOSE = 40
-	AV_LOG_DEBUG   = 48
-	AV_LOG_TRACE   = 56
+	AvLogQuiet   = -8
+	AvLogPanic   = 0
+	AvLogFatal   = 8
+	AvLogError   = 16
+	AvLogWarning = 24
+	AvLogInfo    = 32
+	AvLogVerbose = 40
+	AvLogDebug   = 48
+	AvLogTrace   = 56
 )
 
+// AvLogSetLevel Set the log level
 func AvLogSetLevel(level int) {
 	C.av_log_set_level(C.int(level))
 }
 
+// AvLogGetLevel Get the current log level
 func AvLogGetLevel() int {
 	return int(C.av_log_get_level())
 }
