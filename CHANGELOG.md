@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [v1.0.3] - 2020/11/25
+
+- modify module path: github.com/giorgisio/goav => github.com/xueqing/goav
+
 ## [v1.0.2] - 2020/11/25
 
 - fix: on ubuntu, AvErrorEAGAIN = -11
