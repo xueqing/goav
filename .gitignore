@@ -1,5 +1,5 @@
 .idea/
 .vscode/
-versions
-tutorial01
+example/versions/versions
+example/tutorial01/tutorial01
 *.ppm
