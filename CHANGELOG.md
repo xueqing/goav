@@ -1,5 +1,9 @@
 # ChangeLog
 
+## [v1.0.5] - 2020/11/25
+
+- remove deprecated api
+
 ## [v1.0.4] - 2020/11/25
 
 - modify example path
