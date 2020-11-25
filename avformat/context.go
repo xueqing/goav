@@ -21,50 +21,6 @@ const (
 	AvseekFlagFrame    = 8 ///< seeking based on frame number
 )
 
-func (s *Context) AvFormatGetProbeScore() int {
-	return int(C.av_format_get_probe_score((*C.struct_AVFormatContext)(s)))
-}
-
-func (s *Context) AvFormatGetVideoCodec() *AvCodec {
-	return (*AvCodec)(C.av_format_get_video_codec((*C.struct_AVFormatContext)(s)))
-}
-
-func (s *Context) AvFormatSetVideoCodec(c *AvCodec) {
-	C.av_format_set_video_codec((*C.struct_AVFormatContext)(s), (*C.struct_AVCodec)(c))
-}
-
-func (s *Context) AvFormatGetAudioCodec() *AvCodec {
-	return (*AvCodec)(C.av_format_get_audio_codec((*C.struct_AVFormatContext)(s)))
-}
-
-func (s *Context) AvFormatSetAudioCodec(c *AvCodec) {
-	C.av_format_set_audio_codec((*C.struct_AVFormatContext)(s), (*C.struct_AVCodec)(c))
-}
-
-func (s *Context) AvFormatGetSubtitleCodec() *AvCodec {
-	return (*AvCodec)(C.av_format_get_subtitle_codec((*C.struct_AVFormatContext)(s)))
-}
-
-func (s *Context) AvFormatSetSubtitleCodec(c *AvCodec) {
-	C.av_format_set_subtitle_codec((*C.struct_AVFormatContext)(s), (*C.struct_AVCodec)(c))
-}
-
-func (s *Context) AvFormatGetMetadataHeaderPadding() int {
-	return int(C.av_format_get_metadata_header_padding((*C.struct_AVFormatContext)(s)))
-}
-
-func (s *Context) AvFormatSetMetadataHeaderPadding(c int) {
-	C.av_format_set_metadata_header_padding((*C.struct_AVFormatContext)(s), C.int(c))
-}
-
-func (s *Context) AvFormatGetOpaque() {
-	C.av_format_get_opaque((*C.struct_AVFormatContext)(s))
-}
-
-func (s *Context) AvFormatSetOpaque(o int) {
-	C.av_format_set_opaque((*C.struct_AVFormatContext)(s), unsafe.Pointer(&o))
-}
-
 //This function will cause global side data to be injected in the next packet of each stream as well as after any subsequent seek.
 func (s *Context) AvFormatInjectGlobalSideData() {
 	C.av_format_inject_global_side_data((*C.struct_AVFormatContext)(s))

@@ -96,7 +96,7 @@ func main() {
 			}
 			// Copy context
 			pCodecCtx := pCodec.AvcodecAllocContext3()
-			if pCodecCtx.AvcodecCopyContext((*avcodec.Context)(unsafe.Pointer(pCodecCtxOrig))) != 0 {
+			if pCodecCtx.AvcodecParametersToContext(pFormatContext.Streams()[i].CodecParameters()) != 0 {
 				fmt.Println("Couldn't copy codec context")
 				os.Exit(1)
 			}
@@ -118,15 +118,17 @@ func main() {
 			}
 
 			// Determine required buffer size and allocate buffer
-			numBytes := uintptr(avcodec.AvpictureGetSize(avcodec.AV_PIX_FMT_RGB24, pCodecCtx.Width(),
-				pCodecCtx.Height()))
+			numBytes := uintptr(avutil.AvImageGetBufferSize(avutil.PixelFormat(avcodec.AV_PIX_FMT_RGB24), pCodecCtx.Width(),
+				pCodecCtx.Height(), 1))
 			buffer := avutil.AvMalloc(numBytes)
 
 			// Assign appropriate parts of buffer to image planes in pFrameRGB
-			// Note that pFrameRGB is an AVFrame, but AVFrame is a superset
-			// of AVPicture
 			avp := (*avcodec.Picture)(unsafe.Pointer(pFrameRGB))
 			avp.AvpictureFill((*uint8)(buffer), avcodec.AV_PIX_FMT_RGB24, pCodecCtx.Width(), pCodecCtx.Height())
+			// if ret := avutil.AvImageFillArrays(avutil.Data(pFrameRGB), avutil.Linesize(pFrameRGB), (*uint8)(buffer),
+			// 	avutil.PixelFormat(avcodec.AV_PIX_FMT_RGB24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
+			// 	fmt.Printf("Error while filling an image: %s\n", avutil.ErrorFromCode(ret))
+			// }
 
 			// initialize SWS context for software scaling
 			swsCtx := swscale.SwsGetcontext(
@@ -179,7 +181,7 @@ func main() {
 				}
 
 				// Free the packet that was allocated by av_read_frame
-				packet.AvFreePacket()
+				packet.AvPacketUnref()
 			}
 
 			// Free the RGB image
