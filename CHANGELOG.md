@@ -1,5 +1,10 @@
 # ChangeLog
 
+## [v1.1.0] - 2020/11/26
+
+- remove golint warnings: add comment for exported const/func
+- package xxx => package libxxx
+
 ## [v1.0.5] - 2020/11/25
 
 - remove deprecated api
