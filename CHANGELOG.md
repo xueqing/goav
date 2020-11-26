@@ -1,5 +1,11 @@
 # ChangeLog
 
+## [v1.1.1] - 2020/11/26
+
+- add C.enum_AVRounding
+- libavcodec: add some api
+- libavformat.Stream: add some api
+
 ## [v1.1.0] - 2020/11/26
 
 - remove golint warnings: add comment for exported const/func
