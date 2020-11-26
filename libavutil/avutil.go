@@ -19,6 +19,7 @@ type (
 	Options       C.struct_AVOptions
 	AvTree        C.struct_AVTree
 	Rational      C.struct_AVRational
+	Rounding      C.enum_AVRounding
 	MediaType     C.enum_AVMediaType
 	AvPictureType C.enum_AVPictureType
 	PixelFormat   C.enum_AVPixelFormat

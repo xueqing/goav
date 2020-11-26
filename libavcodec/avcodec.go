@@ -55,6 +55,7 @@ type (
 	AvPacketSideDataType          C.enum_AVPacketSideDataType
 	PixelFormat                   C.enum_AVPixelFormat
 	AvSampleFormat                C.enum_AVSampleFormat
+	Rounding                      C.enum_AVRounding
 )
 
 // AvCodecGetID Return codec_id
