@@ -32,7 +32,7 @@ import (
 )
 
 // SaveFrame writes a single frame to disk as a PPM file
-func SaveFrame(frame *libavutil.Frame, width, height, frameNumber int) {
+func SaveFrame(frame *libavutil.AvFrame, width, height, frameNumber int) {
 	// Open file
 	fileName := fmt.Sprintf("frame%d.ppm", frameNumber)
 	file, err := os.Create(fileName)
@@ -88,7 +88,7 @@ func main() {
 			// Get a pointer to the codec context for the video stream
 			pCodecCtxOrig := pFormatContext.Streams()[i].Codec()
 			// Find the decoder for the video stream
-			pCodec := libavcodec.AvcodecFindDecoder(libavcodec.CodecID(pCodecCtxOrig.GetCodecID()))
+			pCodec := libavcodec.AvcodecFindDecoder(libavcodec.AvCodecID(pCodecCtxOrig.GetCodecID()))
 			if pCodec == nil {
 				fmt.Println("Unsupported codec!")
 				os.Exit(1)
@@ -109,7 +109,7 @@ func main() {
 			// Allocate video frame
 			pFrame := libavutil.AvFrameAlloc()
 
-			// Allocate an AVFrame structure
+			// Allocate an AvFrame structure
 			pFrameRGB := libavutil.AvFrameAlloc()
 			if pFrameRGB == nil {
 				fmt.Println("Unable to allocate RGB Frame")
@@ -117,15 +117,15 @@ func main() {
 			}
 
 			// Determine required buffer size and allocate buffer
-			numBytes := uintptr(libavutil.AvImageGetBufferSize(libavutil.PixelFormat(libavcodec.AvPixFmtRgb24), pCodecCtx.Width(),
+			numBytes := uintptr(libavutil.AvImageGetBufferSize(libavutil.AvPixelFormat(libavcodec.AvPixFmtRgb24), pCodecCtx.Width(),
 				pCodecCtx.Height(), 1))
 			buffer := libavutil.AvMalloc(numBytes)
 
 			// Assign appropriate parts of buffer to image planes in pFrameRGB
-			avp := (*libavcodec.Picture)(unsafe.Pointer(pFrameRGB))
+			avp := (*libavcodec.AvPicture)(unsafe.Pointer(pFrameRGB))
 			avp.AvpictureFill((*uint8)(buffer), libavcodec.AvPixFmtRgb24, pCodecCtx.Width(), pCodecCtx.Height())
 			// if ret := libavutil.AvImageFillArrays(libavutil.Data(pFrameRGB), libavutil.Linesize(pFrameRGB), (*uint8)(buffer),
-			// 	libavutil.PixelFormat(libavcodec.AvPixFmtRgb24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
+			// 	libavutil.AvPixelFormat(libavcodec.AvPixFmtRgb24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
 			// 	fmt.Printf("Error while filling an image: %s\n", libavutil.ErrorFromCode(ret))
 			// }
 
@@ -133,7 +133,7 @@ func main() {
 			swsCtx := libswscale.SwsGetcontext(
 				pCodecCtx.Width(),
 				pCodecCtx.Height(),
-				(libswscale.PixelFormat)(pCodecCtx.PixFmt()),
+				(libswscale.AvPixelFormat)(pCodecCtx.PixFmt()),
 				pCodecCtx.Width(),
 				pCodecCtx.Height(),
 				libavcodec.AvPixFmtRgb24,
@@ -155,7 +155,7 @@ func main() {
 						fmt.Printf("Error while sending a packet to the decoder: %s\n", libavutil.ErrorFromCode(response))
 					}
 					for response >= 0 {
-						response = pCodecCtx.AvcodecReceiveFrame((*libavcodec.Frame)(unsafe.Pointer(pFrame)))
+						response = pCodecCtx.AvcodecReceiveFrame((*libavcodec.AvFrame)(unsafe.Pointer(pFrame)))
 						if response == libavutil.AvErrorEAGAIN || response == libavutil.AvErrorEOF {
 							break
 						} else if response < 0 {
@@ -192,7 +192,7 @@ func main() {
 
 			// Close the codecs
 			pCodecCtx.AvcodecClose()
-			(*libavcodec.Context)(unsafe.Pointer(pCodecCtxOrig)).AvcodecClose()
+			(*libavcodec.AvCodecContext)(unsafe.Pointer(pCodecCtxOrig)).AvcodecClose()
 
 			// Close the video file
 			pFormatContext.AvformatCloseInput()

@@ -4,7 +4,7 @@
 
 - add C.enum_AVRounding
 - libavcodec: add some api
-- libavformat.Stream: add some api
+- libavformat.AvStream: add some api
 
 ## [v1.1.0] - 2020/11/26
 
@@ -29,7 +29,7 @@
 
 ## [v1.0.1] - 2020/11/25
 
-- fix: Packet.SetPts
+- fix: AvPacket.SetPts
 
 ## [v1.0.0] - 2020/11/25
 

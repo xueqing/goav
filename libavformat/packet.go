@@ -12,10 +12,10 @@ import (
 	"github.com/xueqing/goav/libavcodec"
 )
 
-func toCPacket(pkt *libavcodec.Packet) *C.struct_AVPacket {
+func toCPacket(pkt *libavcodec.AvPacket) *C.struct_AVPacket {
 	return (*C.struct_AVPacket)(unsafe.Pointer(pkt))
 }
 
-func fromCPacket(pkt *C.struct_AVPacket) *libavcodec.Packet {
-	return (*libavcodec.Packet)(unsafe.Pointer(pkt))
+func fromCPacket(pkt *C.struct_AVPacket) *libavcodec.AvPacket {
+	return (*libavcodec.AvPacket)(unsafe.Pointer(pkt))
 }

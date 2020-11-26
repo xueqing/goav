@@ -19,11 +19,11 @@ import (
 )
 
 type (
-	Context     C.struct_SwsContext
-	Filter      C.struct_SwsFilter
-	Vector      C.struct_SwsVector
-	Class       C.struct_AVClass
-	PixelFormat C.enum_AVPixelFormat
+	SwsContext    C.struct_SwsContext
+	SwsFilter     C.struct_SwsFilter
+	SwsVector     C.struct_SwsVector
+	AvClass       C.struct_AVClass
+	AvPixelFormat C.enum_AVPixelFormat
 )
 
 // SwscaleVersion Return the LIBSWSCALE_VERSION_INT constant.
@@ -47,22 +47,22 @@ func SwsGetcoefficients(c int) *int {
 }
 
 // SwsIssupportedinput Return a positive value if pix_fmt is a supported input format, 0 otherwise.
-func SwsIssupportedinput(p PixelFormat) int {
+func SwsIssupportedinput(p AvPixelFormat) int {
 	return int(C.sws_isSupportedInput((C.enum_AVPixelFormat)(p)))
 }
 
 // SwsIssupportedoutput Return a positive value if pix_fmt is a supported output format, 0 otherwise.
-func SwsIssupportedoutput(p PixelFormat) int {
+func SwsIssupportedoutput(p AvPixelFormat) int {
 	return int(C.sws_isSupportedOutput((C.enum_AVPixelFormat)(p)))
 }
 
 // SwsIssupportedendiannessconversion Return a positive value if an endianness conversion for pix_fmt is supported, 0 otherwise.
-func SwsIssupportedendiannessconversion(p PixelFormat) int {
+func SwsIssupportedendiannessconversion(p AvPixelFormat) int {
 	return int(C.sws_isSupportedEndiannessConversion((C.enum_AVPixelFormat)(p)))
 }
 
 // SwsScale Scale the image slice in srcSlice and put the resulting scaled slice in the image in dst.
-func SwsScale(ctxt *Context, src *uint8, str int, y, h int, d *uint8, ds int) int {
+func SwsScale(ctxt *SwsContext, src *uint8, str int, y, h int, d *uint8, ds int) int {
 	cctxt := (*C.struct_SwsContext)(unsafe.Pointer(ctxt))
 	csrc := (*C.uint8_t)(unsafe.Pointer(src))
 	cstr := (*C.int)(unsafe.Pointer(&str))
@@ -72,7 +72,7 @@ func SwsScale(ctxt *Context, src *uint8, str int, y, h int, d *uint8, ds int) in
 }
 
 // SwsScale2 refer SwsScale
-func SwsScale2(ctxt *Context, srcData [8]*uint8, srcStride [8]int32, y, h int, dstData [8]*uint8, dstStride [8]int32) int {
+func SwsScale2(ctxt *SwsContext, srcData [8]*uint8, srcStride [8]int32, y, h int, dstData [8]*uint8, dstStride [8]int32) int {
 	cctxt := (*C.struct_SwsContext)(unsafe.Pointer(ctxt))
 	csrc := (**C.uint8_t)(unsafe.Pointer(&srcData[0]))
 	cstr := (*C.int)(unsafe.Pointer(&srcStride[0]))
@@ -82,14 +82,14 @@ func SwsScale2(ctxt *Context, srcData [8]*uint8, srcStride [8]int32, y, h int, d
 }
 
 // SwsSetcolorspacedetails Return -1 if not supported
-func SwsSetcolorspacedetails(ctxt *Context, it *int, sr int, t *int, dr, b, c, s int) int {
+func SwsSetcolorspacedetails(ctxt *SwsContext, it *int, sr int, t *int, dr, b, c, s int) int {
 	cit := (*C.int)(unsafe.Pointer(it))
 	ct := (*C.int)(unsafe.Pointer(t))
 	return int(C.sws_setColorspaceDetails((*C.struct_SwsContext)(ctxt), cit, C.int(sr), ct, C.int(dr), C.int(b), C.int(c), C.int(s)))
 }
 
 // SwsGetcolorspacedetails Return -1 if not supported
-func SwsGetcolorspacedetails(ctxt *Context, it, sr, t, dr, b, c, s *int) int {
+func SwsGetcolorspacedetails(ctxt *SwsContext, it, sr, t, dr, b, c, s *int) int {
 	cit := (**C.int)(unsafe.Pointer(it))
 	csr := (*C.int)(unsafe.Pointer(sr))
 	ct := (**C.int)(unsafe.Pointer(t))
@@ -101,12 +101,12 @@ func SwsGetcolorspacedetails(ctxt *Context, it, sr, t, dr, b, c, s *int) int {
 }
 
 // SwsGetdefaultfilter Return default fileter
-func SwsGetdefaultfilter(lb, cb, ls, cs, chs, cvs float32, v int) *Filter {
-	return (*Filter)(unsafe.Pointer(C.sws_getDefaultFilter(C.float(lb), C.float(cb), C.float(ls), C.float(cs), C.float(chs), C.float(cvs), C.int(v))))
+func SwsGetdefaultfilter(lb, cb, ls, cs, chs, cvs float32, v int) *SwsFilter {
+	return (*SwsFilter)(unsafe.Pointer(C.sws_getDefaultFilter(C.float(lb), C.float(cb), C.float(ls), C.float(cs), C.float(chs), C.float(cvs), C.int(v))))
 }
 
 // SwsFreefilter free struct
-func SwsFreefilter(f *Filter) {
+func SwsFreefilter(f *SwsFilter) {
 	C.sws_freeFilter((*C.struct_SwsFilter)(f))
 }
 
@@ -121,6 +121,6 @@ func SwsConvertpalette8topacked24(s, d *uint8, px int, p *uint8) {
 }
 
 // SwsGetClass Get the Class for swsContext.
-func SwsGetClass() *Class {
-	return (*Class)(C.sws_get_class())
+func SwsGetClass() *AvClass {
+	return (*AvClass)(C.sws_get_class())
 }
