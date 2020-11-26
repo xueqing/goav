@@ -49,3 +49,8 @@ func NewRational(num, den int) Rational {
 		den: C.int(den),
 	}
 }
+
+// AVRescaleQRnd The operation is mathematically equivalent to `a * bq / cq`.
+func AVRescaleQRnd(a int64, bq, cq Rational, rnd Rounding) int64 {
+	return int64(C.av_rescale_q_rnd(C.int64_t(a), C.struct_AVRational(bq), C.struct_AVRational(cq), C.enum_AVRounding(rnd)))
+}
