@@ -29,7 +29,7 @@ type (
 	AvProbeData                C.struct_AVProbeData
 	AvInputFormat              C.struct_AVInputFormat
 	AvOutputFormat             C.struct_AVOutputFormat
-	AVFormatContext            C.struct_AVFormatContext
+	AvFormatContext            C.struct_AVFormatContext
 	AvFrame                    C.struct_AVFrame
 	AvCodecContext             C.struct_AVCodecContext
 	AvIndexEntry               C.struct_AVIndexEntry
@@ -99,8 +99,8 @@ func AvformatNetworkDeinit() int {
 }
 
 // AvformatAllocContext Allocate an Context.
-func AvformatAllocContext() *AVFormatContext {
-	return (*AVFormatContext)(C.avformat_alloc_context())
+func AvformatAllocContext() *AvFormatContext {
+	return (*AvFormatContext)(C.avformat_alloc_context())
 }
 
 // AvformatGetClass Get the Class for Context.
@@ -115,7 +115,7 @@ func (s *AvStream) AvStreamGetSideData(typ AvPacketSideDataType, size int) *uint
 }
 
 // AvformatAllocOutputContext2 Allocate an Context for an output format.
-func AvformatAllocOutputContext2(ctx **AVFormatContext, oFmt *AvOutputFormat, formatName, fileNmae string) int {
+func AvformatAllocOutputContext2(ctx **AvFormatContext, oFmt *AvOutputFormat, formatName, fileNmae string) int {
 	cFormatName := C.CString(formatName)
 	defer C.free(unsafe.Pointer(cFormatName))
 
@@ -173,7 +173,7 @@ func AvProbeInputBuffer(pb *AvIOContext, format **AvInputFormat, url string, log
 }
 
 // AvformatOpenInput Open an input stream and read the header.
-func AvformatOpenInput(ps **AVFormatContext, url string, format *AvInputFormat, options **libavutil.AvDictionary) int {
+func AvformatOpenInput(ps **AvFormatContext, url string, format *AvInputFormat, options **libavutil.AvDictionary) int {
 	cURL := C.CString(url)
 	defer C.free(unsafe.Pointer(cURL))
 
@@ -310,7 +310,7 @@ func AvFilenameNumberTest(fileName string) int {
 }
 
 // AvSdpCreate Generate an SDP for an RTP session.
-func AvSdpCreate(ac **AVFormatContext, nFiles int, bufSize int) (ret int, buf string) {
+func AvSdpCreate(ac **AvFormatContext, nFiles int, bufSize int) (ret int, buf string) {
 	cBuf := (*C.char)(C.malloc(C.sizeof_char * C.ulong(bufSize)))
 	defer C.free(unsafe.Pointer(cBuf))
 
