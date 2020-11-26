@@ -17,6 +17,19 @@ package libavcodec
 import "C"
 import "fmt"
 
+// NewRational ...
+func NewRational(num, den int) AvRational {
+	return AvRational{
+		num: C.int(num),
+		den: C.int(den),
+	}
+}
+
+// String ...
+func (r AvRational) String() string {
+	return fmt.Sprintf("%d/%d", int(r.num), int(r.den))
+}
+
 // Num Return num
 func (r AvRational) Num() int {
 	return int(r.num)
@@ -25,11 +38,6 @@ func (r AvRational) Num() int {
 // Den Return den
 func (r AvRational) Den() int {
 	return int(r.den)
-}
-
-// String ...
-func (r AvRational) String() string {
-	return fmt.Sprintf("%d/%d", int(r.num), int(r.den))
 }
 
 // Assign ...
@@ -42,15 +50,8 @@ func (r *AvRational) Set(num, den int) {
 	r.num, r.den = C.int(num), C.int(den)
 }
 
-// NewRational ...
-func NewRational(num, den int) AvRational {
-	return AvRational{
-		num: C.int(num),
-		den: C.int(den),
-	}
-}
-
 // AVRescaleQRnd The operation is mathematically equivalent to `a * bq / cq`.
 func AVRescaleQRnd(a int64, bq, cq AvRational, rnd AvRounding) int64 {
-	return int64(C.av_rescale_q_rnd(C.int64_t(a), C.struct_AVRational(bq), C.struct_AVRational(cq), C.enum_AVRounding(rnd)))
+	return int64(C.av_rescale_q_rnd(C.int64_t(a), C.struct_AVRational(bq),
+		C.struct_AVRational(cq), C.enum_AVRounding(rnd)))
 }

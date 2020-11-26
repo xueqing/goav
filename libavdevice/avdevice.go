@@ -50,33 +50,38 @@ func AvdeviceRegisterAll() {
 }
 
 // AvdeviceAppToDevControlMessage Send control message from application to device.
-func AvdeviceAppToDevControlMessage(s *AvFormatContext, m AvAppToDevMessageType, da int, d uintptr) int {
-	return int(C.avdevice_app_to_dev_control_message((*C.struct_AVFormatContext)(s), (C.enum_AVAppToDevMessageType)(m), unsafe.Pointer(&da), C.size_t(d)))
+func AvdeviceAppToDevControlMessage(fctx *AvFormatContext, typ AvAppToDevMessageType, data int, dataSize uintptr) int {
+	return int(C.avdevice_app_to_dev_control_message((*C.struct_AVFormatContext)(fctx),
+		(C.enum_AVAppToDevMessageType)(typ), unsafe.Pointer(&data), C.size_t(dataSize)))
 }
 
 // AvdeviceDevToAppControlMessage Send control message from device to application.
-func AvdeviceDevToAppControlMessage(fcxt *AvFormatContext, m AvDevToAppMessageType, da int, d uintptr) int {
-	return int(C.avdevice_dev_to_app_control_message((*C.struct_AVFormatContext)(fcxt), (C.enum_AVDevToAppMessageType)(m), unsafe.Pointer(&da), C.size_t(d)))
+func AvdeviceDevToAppControlMessage(fctx *AvFormatContext, typ AvDevToAppMessageType, data int, dataSize uintptr) int {
+	return int(C.avdevice_dev_to_app_control_message((*C.struct_AVFormatContext)(fctx),
+		(C.enum_AVDevToAppMessageType)(typ), unsafe.Pointer(&data), C.size_t(dataSize)))
 }
 
 // AvdeviceCapabilitiesCreate Initialize capabilities probing API based on AvOption API.
-func AvdeviceCapabilitiesCreate(c **AvDeviceCapabilitiesQuery, s *AvFormatContext, d **AvDictionary) int {
-	return int(C.avdevice_capabilities_create((**C.struct_AVDeviceCapabilitiesQuery)(unsafe.Pointer(c)), (*C.struct_AVFormatContext)(s), (**C.struct_AVDictionary)(unsafe.Pointer(d))))
+func AvdeviceCapabilitiesCreate(caps **AvDeviceCapabilitiesQuery, fctx *AvFormatContext, deviceOptions **AvDictionary) int {
+	return int(C.avdevice_capabilities_create((**C.struct_AVDeviceCapabilitiesQuery)(unsafe.Pointer(caps)),
+		(*C.struct_AVFormatContext)(fctx), (**C.struct_AVDictionary)(unsafe.Pointer(deviceOptions))))
 }
 
 // AvdeviceCapabilitiesFree Free resources created by avdevice_capabilities_create()
-func AvdeviceCapabilitiesFree(c **AvDeviceCapabilitiesQuery, s *AvFormatContext) {
-	C.avdevice_capabilities_free((**C.struct_AVDeviceCapabilitiesQuery)(unsafe.Pointer(c)), (*C.struct_AVFormatContext)(s))
+func AvdeviceCapabilitiesFree(caps **AvDeviceCapabilitiesQuery, fctx *AvFormatContext) {
+	C.avdevice_capabilities_free((**C.struct_AVDeviceCapabilitiesQuery)(unsafe.Pointer(caps)),
+		(*C.struct_AVFormatContext)(fctx))
 }
 
 // AvdeviceListDevices List devices.
-func AvdeviceListDevices(s *AvFormatContext, d **AvDeviceInfoList) int {
-	return int(C.avdevice_list_devices((*C.struct_AVFormatContext)(s), (**C.struct_AVDeviceInfoList)(unsafe.Pointer(d))))
+func AvdeviceListDevices(fctx *AvFormatContext, deviceList **AvDeviceInfoList) int {
+	return int(C.avdevice_list_devices((*C.struct_AVFormatContext)(fctx),
+		(**C.struct_AVDeviceInfoList)(unsafe.Pointer(deviceList))))
 }
 
 // AvdeviceFreeListDevices Convenient function to free result of avdeviceListDevices().
-func AvdeviceFreeListDevices(d **AvDeviceInfoList) {
-	C.avdevice_free_list_devices((**C.struct_AVDeviceInfoList)(unsafe.Pointer(d)))
+func AvdeviceFreeListDevices(deviceList **AvDeviceInfoList) {
+	C.avdevice_free_list_devices((**C.struct_AVDeviceInfoList)(unsafe.Pointer(deviceList)))
 }
 
 // //int 	avdevice_list_input_sources (struct AvInputFormat *device, const char *device_name, Dictionary *device_options, AvDeviceInfoList **device_list)

@@ -10,6 +10,6 @@ package libavfilter
 import "C"
 
 // AvfilterGetByName Get a filter definition matching the given name.
-func AvfilterGetByName(n string) *AvFilter {
-	return (*AvFilter)(C.avfilter_get_by_name(C.CString(n)))
+func AvfilterGetByName(name string) *AvFilter {
+	return (*AvFilter)(C.avfilter_get_by_name(C.CString(name)))
 }

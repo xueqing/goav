@@ -25,39 +25,42 @@ func (p *AvPacket) AvInitPacket() {
 }
 
 // AvNewPacket Allocate the payload of a packet and initialize its fields with default values.
-func (p *AvPacket) AvNewPacket(s int) int {
-	return int(C.av_new_packet((*C.struct_AVPacket)(p), C.int(s)))
+func (p *AvPacket) AvNewPacket(size int) int {
+	return int(C.av_new_packet((*C.struct_AVPacket)(p), C.int(size)))
 }
 
 // AvShrinkPacket Reduce packet size, correctly zeroing padding.
-func (p *AvPacket) AvShrinkPacket(s int) {
-	C.av_shrink_packet((*C.struct_AVPacket)(p), C.int(s))
+func (p *AvPacket) AvShrinkPacket(size int) {
+	C.av_shrink_packet((*C.struct_AVPacket)(p), C.int(size))
 }
 
 // AvGrowPacket Increase packet size, correctly zeroing padding.
-func (p *AvPacket) AvGrowPacket(s int) int {
-	return int(C.av_grow_packet((*C.struct_AVPacket)(p), C.int(s)))
+func (p *AvPacket) AvGrowPacket(size int) int {
+	return int(C.av_grow_packet((*C.struct_AVPacket)(p), C.int(size)))
 }
 
 // AvPacketFromData Initialize a reference-counted packet from av_malloc()ed data.
-func (p *AvPacket) AvPacketFromData(d *uint8, s int) int {
-	return int(C.av_packet_from_data((*C.struct_AVPacket)(p), (*C.uint8_t)(d), C.int(s)))
+func (p *AvPacket) AvPacketFromData(data *uint8, size int) int {
+	return int(C.av_packet_from_data((*C.struct_AVPacket)(p), (*C.uint8_t)(data), C.int(size)))
 
 }
 
 // AvPacketNewSideData Allocate new information of a packet.
-func (p *AvPacket) AvPacketNewSideData(t AvPacketSideDataType, s int) *uint8 {
-	return (*uint8)(C.av_packet_new_side_data((*C.struct_AVPacket)(p), (C.enum_AVPacketSideDataType)(t), C.int(s)))
+func (p *AvPacket) AvPacketNewSideData(typ AvPacketSideDataType, size int) *uint8 {
+	return (*uint8)(C.av_packet_new_side_data((*C.struct_AVPacket)(p),
+		(C.enum_AVPacketSideDataType)(typ), C.int(size)))
 }
 
 // AvPacketShrinkSideData Shrink the already allocated side data buffer.
-func (p *AvPacket) AvPacketShrinkSideData(t AvPacketSideDataType, s int) int {
-	return int(C.av_packet_shrink_side_data((*C.struct_AVPacket)(p), (C.enum_AVPacketSideDataType)(t), C.int(s)))
+func (p *AvPacket) AvPacketShrinkSideData(typ AvPacketSideDataType, size int) int {
+	return int(C.av_packet_shrink_side_data((*C.struct_AVPacket)(p),
+		(C.enum_AVPacketSideDataType)(typ), C.int(size)))
 }
 
 // AvPacketGetSideData Get side information from packet.
-func (p *AvPacket) AvPacketGetSideData(t AvPacketSideDataType, s *int) *uint8 {
-	return (*uint8)(C.av_packet_get_side_data((*C.struct_AVPacket)(p), (C.enum_AVPacketSideDataType)(t), (*C.int)(unsafe.Pointer(s))))
+func (p *AvPacket) AvPacketGetSideData(typ AvPacketSideDataType, size *int) *uint8 {
+	return (*uint8)(C.av_packet_get_side_data((*C.struct_AVPacket)(p),
+		(C.enum_AVPacketSideDataType)(typ), (*C.int)(unsafe.Pointer(size))))
 }
 
 // AvPacketFreeSideData Convenience function to free all the side data stored.
@@ -66,8 +69,8 @@ func (p *AvPacket) AvPacketFreeSideData() {
 }
 
 // AvPacketRef Setup a new reference to the data described by a given packet.
-func (p *AvPacket) AvPacketRef(s *AvPacket) int {
-	return int(C.av_packet_ref((*C.struct_AVPacket)(p), (*C.struct_AVPacket)(s)))
+func (p *AvPacket) AvPacketRef(src *AvPacket) int {
+	return int(C.av_packet_ref((*C.struct_AVPacket)(p), (*C.struct_AVPacket)(src)))
 }
 
 // AvPacketUnref Wipe the packet.
@@ -81,11 +84,12 @@ func (p *AvPacket) AvPacketMoveRef(s *AvPacket) {
 }
 
 // AvPacketCopyProps Copy only "properties" fields from src to dst.
-func (p *AvPacket) AvPacketCopyProps(s *AvPacket) int {
-	return int(C.av_packet_copy_props((*C.struct_AVPacket)(p), (*C.struct_AVPacket)(s)))
+func (p *AvPacket) AvPacketCopyProps(src *AvPacket) int {
+	return int(C.av_packet_copy_props((*C.struct_AVPacket)(p), (*C.struct_AVPacket)(src)))
 }
 
 // AvPacketRescaleTs Convert valid timing fields (timestamps / durations) in a packet from one timebase to another.
-func (p *AvPacket) AvPacketRescaleTs(r, r2 AvRational) {
-	C.av_packet_rescale_ts((*C.struct_AVPacket)(p), (C.struct_AVRational)(r), (C.struct_AVRational)(r2))
+func (p *AvPacket) AvPacketRescaleTs(tbSrc, tbDst AvRational) {
+	C.av_packet_rescale_ts((*C.struct_AVPacket)(p), (C.struct_AVRational)(tbSrc),
+		(C.struct_AVRational)(tbDst))
 }

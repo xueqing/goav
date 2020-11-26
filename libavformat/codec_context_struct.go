@@ -32,8 +32,8 @@ func (cctx *AvCodecContext) SetBitRate(br int64) {
 	cctx.bit_rate = C.int64_t(br)
 }
 
-// GetCodecID Return codec_id
-func (cctx *AvCodecContext) GetCodecID() AvCodecID {
+// CodecID Return codec_id
+func (cctx *AvCodecContext) CodecID() AvCodecID {
 	return AvCodecID(cctx.codec_id)
 }
 
@@ -42,8 +42,8 @@ func (cctx *AvCodecContext) SetCodecID(codecID AvCodecID) {
 	cctx.codec_id = C.enum_AVCodecID(codecID)
 }
 
-// GetCodecType Return codec_type
-func (cctx *AvCodecContext) GetCodecType() AvMediaType {
+// CodecType Return codec_type
+func (cctx *AvCodecContext) CodecType() AvMediaType {
 	return AvMediaType(cctx.codec_type)
 }
 
@@ -52,8 +52,8 @@ func (cctx *AvCodecContext) SetCodecType(ctype AvMediaType) {
 	cctx.codec_type = C.enum_AVMediaType(ctype)
 }
 
-// GetTimeBase Return time_base
-func (cctx *AvCodecContext) GetTimeBase() libavcodec.AvRational {
+// TimeBase Return time_base
+func (cctx *AvCodecContext) TimeBase() libavcodec.AvRational {
 	return newRational(cctx.time_base)
 }
 
@@ -63,8 +63,8 @@ func (cctx *AvCodecContext) SetTimeBase(timeBase libavcodec.AvRational) {
 	cctx.time_base.den = C.int(timeBase.Den())
 }
 
-// GetWidth Return width
-func (cctx *AvCodecContext) GetWidth() int {
+// Width Return width
+func (cctx *AvCodecContext) Width() int {
 	return int(cctx.width)
 }
 
@@ -73,8 +73,8 @@ func (cctx *AvCodecContext) SetWidth(w int) {
 	cctx.width = C.int(w)
 }
 
-// GetHeight Return height
-func (cctx *AvCodecContext) GetHeight() int {
+// Height Return height
+func (cctx *AvCodecContext) Height() int {
 	return int(cctx.height)
 }
 
@@ -83,8 +83,8 @@ func (cctx *AvCodecContext) SetHeight(h int) {
 	cctx.height = C.int(h)
 }
 
-// GetPixelFormat Return pix_fmt
-func (cctx *AvCodecContext) GetPixelFormat() libavcodec.AvPixelFormat {
+// PixelFormat Return pix_fmt
+func (cctx *AvCodecContext) PixelFormat() libavcodec.AvPixelFormat {
 	return libavcodec.AvPixelFormat(C.int(cctx.pix_fmt))
 }
 
@@ -93,8 +93,8 @@ func (cctx *AvCodecContext) SetPixelFormat(fmt libavcodec.AvPixelFormat) {
 	cctx.pix_fmt = C.enum_AVPixelFormat(C.int(fmt))
 }
 
-// GetFlags Return flags
-func (cctx *AvCodecContext) GetFlags() int {
+// Flags Return flags
+func (cctx *AvCodecContext) Flags() int {
 	return int(cctx.flags)
 }
 
@@ -103,8 +103,8 @@ func (cctx *AvCodecContext) SetFlags(flags int) {
 	cctx.flags = C.int(flags)
 }
 
-// GetMeRange Return me_range
-func (cctx *AvCodecContext) GetMeRange() int {
+// MeRange Return me_range
+func (cctx *AvCodecContext) MeRange() int {
 	return int(cctx.me_range)
 }
 
@@ -113,8 +113,8 @@ func (cctx *AvCodecContext) SetMeRange(r int) {
 	cctx.me_range = C.int(r)
 }
 
-// GetMaxQDiff Return max_qdiff
-func (cctx *AvCodecContext) GetMaxQDiff() int {
+// MaxQDiff Return max_qdiff
+func (cctx *AvCodecContext) MaxQDiff() int {
 	return int(cctx.max_qdiff)
 }
 
@@ -123,8 +123,8 @@ func (cctx *AvCodecContext) SetMaxQDiff(v int) {
 	cctx.max_qdiff = C.int(v)
 }
 
-// GetQMin Return qmin
-func (cctx *AvCodecContext) GetQMin() int {
+// QMin Return qmin
+func (cctx *AvCodecContext) QMin() int {
 	return int(cctx.qmin)
 }
 
@@ -133,8 +133,8 @@ func (cctx *AvCodecContext) SetQMin(v int) {
 	cctx.qmin = C.int(v)
 }
 
-// GetQMax Return qmax
-func (cctx *AvCodecContext) GetQMax() int {
+// QMax Return qmax
+func (cctx *AvCodecContext) QMax() int {
 	return int(cctx.qmax)
 }
 
@@ -143,8 +143,8 @@ func (cctx *AvCodecContext) SetQMax(v int) {
 	cctx.qmax = C.int(v)
 }
 
-// GetQCompress Return qcompress
-func (cctx *AvCodecContext) GetQCompress() float32 {
+// QCompress Return qcompress
+func (cctx *AvCodecContext) QCompress() float32 {
 	return float32(cctx.qcompress)
 }
 
@@ -153,8 +153,8 @@ func (cctx *AvCodecContext) SetQCompress(v float32) {
 	cctx.qcompress = C.float(v)
 }
 
-// GetExtraData Return extradata
-func (cctx *AvCodecContext) GetExtraData() []byte {
+// ExtraData Return extradata
+func (cctx *AvCodecContext) ExtraData() []byte {
 	header := reflect.SliceHeader{
 		Data: uintptr(unsafe.Pointer(cctx.extradata)),
 		Len:  int(cctx.extradata_size),

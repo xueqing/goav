@@ -34,14 +34,11 @@ const (
 
 // AvDictGet Get a dictionary entry with matching key.
 func (d *AvDictionary) AvDictGet(key string, prev *AvDictionaryEntry, flags int) *AvDictionaryEntry {
-	Ckey := C.CString(key)
-	defer C.free(unsafe.Pointer(Ckey))
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
 
-	return (*AvDictionaryEntry)(C.av_dict_get(
-		(*C.struct_AVDictionary)(d),
-		Ckey,
-		(*C.struct_AVDictionaryEntry)(prev),
-		C.int(flags),
+	return (*AvDictionaryEntry)(C.av_dict_get((*C.struct_AVDictionary)(d),
+		cKey, (*C.struct_AVDictionaryEntry)(prev), C.int(flags),
 	))
 }
 
@@ -52,37 +49,29 @@ func (d *AvDictionary) AvDictCount() int {
 
 // AvDictSet Set the given entry in *pm, overwriting an existing entry.
 func (d *AvDictionary) AvDictSet(key, value string, flags int) int {
-	Ckey := C.CString(key)
-	defer C.free(unsafe.Pointer(Ckey))
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
 
-	Cvalue := C.CString(value)
-	defer C.free(unsafe.Pointer(Cvalue))
+	cValue := C.CString(value)
+	defer C.free(unsafe.Pointer(cValue))
 
-	return int(C.av_dict_set(
-		(**C.struct_AVDictionary)(unsafe.Pointer(&d)),
-		Ckey,
-		Cvalue,
-		C.int(flags),
-	))
+	return int(C.av_dict_set((**C.struct_AVDictionary)(unsafe.Pointer(&d)),
+		cKey, cValue, C.int(flags)))
 }
 
 // AvDictSetInt Convenience wrapper for av_dict_set that converts the value to a string and stores it.
 func (d *AvDictionary) AvDictSetInt(key string, value int64, flags int) int {
-	Ckey := C.CString(key)
-	defer C.free(unsafe.Pointer(Ckey))
+	cKey := C.CString(key)
+	defer C.free(unsafe.Pointer(cKey))
 
-	return int(C.av_dict_set_int(
-		(**C.struct_AVDictionary)(unsafe.Pointer(&d)),
-		Ckey,
-		C.int64_t(value),
-		C.int(flags),
-	))
+	return int(C.av_dict_set_int((**C.struct_AVDictionary)(unsafe.Pointer(&d)),
+		cKey, C.int64_t(value), C.int(flags)))
 }
 
 // AvDictParseString Parse the key/value pairs list and add the parsed entries to a dictionary.
 func (d *AvDictionary) AvDictParseString(str, keyValSep, pairsSep string, flags int) int {
-	Cstr := C.CString(str)
-	defer C.free(unsafe.Pointer(Cstr))
+	cStr := C.CString(str)
+	defer C.free(unsafe.Pointer(cStr))
 
 	cKeyValSep := C.CString(keyValSep)
 	defer C.free(unsafe.Pointer(cKeyValSep))
@@ -90,22 +79,14 @@ func (d *AvDictionary) AvDictParseString(str, keyValSep, pairsSep string, flags 
 	cPairsSep := C.CString(pairsSep)
 	defer C.free(unsafe.Pointer(cPairsSep))
 
-	return int(C.av_dict_parse_string(
-		(**C.struct_AVDictionary)(unsafe.Pointer(&d)),
-		Cstr,
-		cKeyValSep,
-		cPairsSep,
-		C.int(flags),
-	))
+	return int(C.av_dict_parse_string((**C.struct_AVDictionary)(unsafe.Pointer(&d)),
+		cStr, cKeyValSep, cPairsSep, C.int(flags)))
 }
 
 // AvDictCopy Copy entries from one AvDictionary struct into another.
 func (d *AvDictionary) AvDictCopy(src *AvDictionary, flags int) int {
-	return int(C.av_dict_copy(
-		(**C.struct_AVDictionary)(unsafe.Pointer(&d)),
-		(*C.struct_AVDictionary)(unsafe.Pointer(src)),
-		C.int(flags),
-	))
+	return int(C.av_dict_copy((**C.struct_AVDictionary)(unsafe.Pointer(&d)),
+		(*C.struct_AVDictionary)(unsafe.Pointer(src)), C.int(flags)))
 }
 
 // AvDictFree Free all the memory allocated for an AvDictionary struct and all keys and values.
@@ -114,23 +95,18 @@ func (d *AvDictionary) AvDictFree() {
 }
 
 // AvDictGetString Get dictionary entries as a string.
-func (d *AvDictionary) AvDictGetString(keyValSep, pairsSep byte) (int, string) {
-	var Cbuf *C.char
+func (d *AvDictionary) AvDictGetString(keyValSep, pairsSep byte) (ret int, buf string) {
+	var cBuf *C.char
 
-	ret := int(C.av_dict_get_string(
-		(*C.struct_AVDictionary)(d),
-		(**C.char)(&Cbuf),
-		C.char(keyValSep),
-		C.char(pairsSep),
-	))
+	ret = int(C.av_dict_get_string((*C.struct_AVDictionary)(d),
+		(**C.char)(&cBuf), C.char(keyValSep), C.char(pairsSep)))
 
-	var buf string
 	if ret == 0 {
-		buf = C.GoString(Cbuf)
-		C.free(unsafe.Pointer(Cbuf))
+		buf = C.GoString(cBuf)
+		C.free(unsafe.Pointer(cBuf))
 	}
 
-	return ret, buf
+	return
 }
 
 // Key Return key

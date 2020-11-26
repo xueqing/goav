@@ -42,13 +42,13 @@ func AvutilLicense() string {
 }
 
 // AvGetMediaTypeString Return a string describing the media_type enum, NULL if media_type is unknown.
-func AvGetMediaTypeString(mt AvMediaType) string {
-	return C.GoString(C.av_get_media_type_string((C.enum_AVMediaType)(mt)))
+func AvGetMediaTypeString(typ AvMediaType) string {
+	return C.GoString(C.av_get_media_type_string((C.enum_AVMediaType)(typ)))
 }
 
 // AvGetPictureTypeChar Return a single letter to describe the given picture type pict_type.
-func AvGetPictureTypeChar(pt AvPictureType) string {
-	return string(C.av_get_picture_type_char((C.enum_AVPictureType)(pt)))
+func AvGetPictureTypeChar(typ AvPictureType) string {
+	return string(C.av_get_picture_type_char((C.enum_AVPictureType)(typ)))
 }
 
 // AvXIfNull Return x default pointer in case p is NULL.
@@ -57,13 +57,14 @@ func AvXIfNull(p, x int) {
 }
 
 // AvIntListLengthForSize Compute the length of an integer list.
-func AvIntListLengthForSize(e uint, l int, t uint64) uint {
-	return uint(C.av_int_list_length_for_size(C.uint(e), unsafe.Pointer(&l), (C.uint64_t)(t)))
+func AvIntListLengthForSize(elsize uint, list int, term uint64) uint {
+	return uint(C.av_int_list_length_for_size(C.uint(elsize),
+		unsafe.Pointer(&list), (C.uint64_t)(term)))
 }
 
 // AvFopenUtf8 Open a file using a UTF-8 filename.
-func AvFopenUtf8(p, m string) *File {
-	f := C.av_fopen_utf8(C.CString(p), C.CString(m))
+func AvFopenUtf8(path, mode string) *File {
+	f := C.av_fopen_utf8(C.CString(path), C.CString(mode))
 	return (*File)(f)
 }
 

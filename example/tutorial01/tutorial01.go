@@ -47,9 +47,9 @@ func SaveFrame(frame *libavutil.AvFrame, width, height, frameNumber int) {
 
 	// Write pixel data
 	for y := 0; y < height; y++ {
-		data0 := libavutil.Data(frame)[0]
+		data0 := frame.Data()[0]
 		buf := make([]byte, width*3)
-		startPos := uintptr(unsafe.Pointer(data0)) + uintptr(y)*uintptr(libavutil.Linesize(frame)[0])
+		startPos := uintptr(unsafe.Pointer(data0)) + uintptr(y)*uintptr(frame.Linesize()[0])
 		for i := 0; i < width*3; i++ {
 			element := *(*uint8)(unsafe.Pointer(startPos + uintptr(i)))
 			buf[i] = element
@@ -82,13 +82,13 @@ func main() {
 
 	// Find the first video stream
 	for i := 0; i < int(pFormatContext.NbStreams()); i++ {
-		switch pFormatContext.Streams()[i].CodecParameters().AvCodecGetType() {
+		switch pFormatContext.Streams()[i].CodecParameters().CodecType() {
 		case libavformat.AvmediaTypeVideo:
 
 			// Get a pointer to the codec context for the video stream
 			pCodecCtxOrig := pFormatContext.Streams()[i].Codec()
 			// Find the decoder for the video stream
-			pCodec := libavcodec.AvcodecFindDecoder(libavcodec.AvCodecID(pCodecCtxOrig.GetCodecID()))
+			pCodec := libavcodec.AvcodecFindDecoder(libavcodec.AvCodecID(pCodecCtxOrig.CodecID()))
 			if pCodec == nil {
 				fmt.Println("Unsupported codec!")
 				os.Exit(1)
@@ -165,9 +165,9 @@ func main() {
 
 						if frameNumber <= 5 {
 							// Convert the image from its native format to RGB
-							libswscale.SwsScale2(swsCtx, libavutil.Data(pFrame),
-								libavutil.Linesize(pFrame), 0, pCodecCtx.Height(),
-								libavutil.Data(pFrameRGB), libavutil.Linesize(pFrameRGB))
+							libswscale.SwsScale2(swsCtx, pFrame.Data(),
+								pFrame.Linesize(), 0, pCodecCtx.Height(),
+								pFrameRGB.Data(), pFrameRGB.Linesize())
 
 							// Save the frame to disk
 							fmt.Printf("Writing frame %d\n", frameNumber)
