@@ -73,9 +73,19 @@ func (cp *AvCodecParameters) AvCodecGetWidth() int {
 	return (int)(*((*int32)(unsafe.Pointer(&cp.width))))
 }
 
+// AvCodecSetWidth Set width
+func (cp *AvCodecParameters) AvCodecSetWidth(w int) {
+	cp.width = C.int(w)
+}
+
 // AvCodecGetHeight Return height
 func (cp *AvCodecParameters) AvCodecGetHeight() int {
 	return (int)(*((*int32)(unsafe.Pointer(&cp.height))))
+}
+
+// AvCodecSetHeight Set height
+func (cp *AvCodecParameters) AvCodecSetHeight(h int) {
+	cp.height = C.int(h)
 }
 
 // AvCodecGetChannels Return channels
@@ -83,9 +93,45 @@ func (cp *AvCodecParameters) AvCodecGetChannels() int {
 	return *((*int)(unsafe.Pointer(&cp.channels)))
 }
 
+// AvCodecSetChannels Set channels
+func (cp *AvCodecParameters) AvCodecSetChannels(nc int) {
+	cp.channels = C.int(nc)
+}
+
+// AvCodecGetChannelLayout Return channel_layout
+func (cp *AvCodecParameters) AvCodecGetChannelLayout() uint64 {
+	return *((*uint64)(unsafe.Pointer(&cp.channel_layout)))
+}
+
+// AvCodecSetChannelLayout Set channel_layout
+func (cp *AvCodecParameters) AvCodecSetChannelLayout(cl uint64) {
+	cp.channel_layout = C.uint64_t(cl)
+}
+
+// AvCodecGetFormat Return format
+func (cp *AvCodecParameters) AvCodecGetFormat() int {
+	return *((*int)(unsafe.Pointer(&cp.format)))
+}
+
+// AvCodecSetFormat Set format
+func (cp *AvCodecParameters) AvCodecSetFormat(f int) {
+	cp.format = C.int(f)
+}
+
 // AvCodecGetSampleRate Return sample_rate
 func (cp *AvCodecParameters) AvCodecGetSampleRate() int {
 	return *((*int)(unsafe.Pointer(&cp.sample_rate)))
+}
+
+// AvCodecSetSampleRate Set sample_rate
+func (cp *AvCodecParameters) AvCodecSetSampleRate(sr int) {
+	cp.sample_rate = C.int(sr)
+}
+
+// AvcodecParametersCopy Copy the contents of src to dst. Any allocated fields in dst are freed and
+// replaced with newly allocated duplicates of the corresponding fields in src.
+func (cp *AvCodecParameters) AvcodecParametersCopy(acp *AvCodecParameters) int {
+	return int(C.avcodec_parameters_copy((*C.struct_AVCodecParameters)(cp), (*C.struct_AVCodecParameters)(acp)))
 }
 
 // AvGetProfileName Return a name for the specified profile, if available.

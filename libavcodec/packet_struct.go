@@ -17,6 +17,11 @@ func (p *Packet) Duration() int {
 	return int(p.duration)
 }
 
+// SetDuration Set duration
+func (p *Packet) SetDuration(dur int64) {
+	p.duration = C.int64_t(dur)
+}
+
 // Flags Return flags
 func (p *Packet) Flags() int {
 	return int(p.flags)
@@ -65,6 +70,11 @@ func (p *Packet) SetDts(dts int64) {
 // Pos Return pos
 func (p *Packet) Pos() int64 {
 	return int64(p.pos)
+}
+
+// SetPos Set pos
+func (p *Packet) SetPos(pos int64) {
+	p.pos = C.int64_t(pos)
 }
 
 // Pts Return pts

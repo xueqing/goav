@@ -3,6 +3,8 @@
 
 package libavcodec
 
+import "C"
+
 // ActiveThreadType Return active_thread_type
 func (ctxt *Context) ActiveThreadType() int {
 	return int(ctxt.active_thread_type)
@@ -216,6 +218,11 @@ func (ctxt *Context) HeaderBits() int {
 // Height Return height
 func (ctxt *Context) Height() int {
 	return int(ctxt.height)
+}
+
+// SetHeight Set height
+func (ctxt *Context) SetHeight(h int) {
+	ctxt.height = C.int(h)
 }
 
 // ICount Return i_count
@@ -596,6 +603,11 @@ func (ctxt *Context) Trellis() int {
 // Width Return width
 func (ctxt *Context) Width() int {
 	return int(ctxt.width)
+}
+
+// SetWidth Set width
+func (ctxt *Context) SetWidth(w int) {
+	ctxt.width = C.int(w)
 }
 
 // WorkaroundBugs Return workaround_bugs
