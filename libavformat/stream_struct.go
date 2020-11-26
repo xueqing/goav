@@ -18,6 +18,11 @@ func (avs *Stream) CodecParameters() *libavcodec.AvCodecParameters {
 	return (*libavcodec.AvCodecParameters)(unsafe.Pointer(avs.codecpar))
 }
 
+// SetCodecParameters Set codecpar
+func (avs *Stream) SetCodecParameters(pCodecPara *libavcodec.AvCodecParameters) {
+	avs.codecpar = (*C.struct_AVCodecParameters)(unsafe.Pointer(pCodecPara))
+}
+
 // Codec Return codec
 func (avs *Stream) Codec() *CodecContext {
 	return (*CodecContext)(unsafe.Pointer(avs.codec))
@@ -62,6 +67,12 @@ func (avs *Stream) RFrameRate() libavcodec.Rational {
 	return newRational(avs.r_frame_rate)
 }
 
+// SetRFrameRate Set r_frame_rate
+func (avs *Stream) SetRFrameRate(frameRate libavcodec.Rational) {
+	avs.r_frame_rate.num = C.int(frameRate.Num())
+	avs.r_frame_rate.den = C.int(frameRate.Den())
+}
+
 // SampleAspectRatio Return sample_aspect_ratio
 func (avs *Stream) SampleAspectRatio() libavcodec.Rational {
 	return newRational(avs.sample_aspect_ratio)
@@ -72,6 +83,22 @@ func (avs *Stream) TimeBase() libavcodec.Rational {
 	return newRational(avs.time_base)
 }
 
+// SetTimeBase Set time_base
+func (avs *Stream) SetTimeBase(timeBase libavcodec.Rational) {
+	avs.time_base.num = C.int(timeBase.Num())
+	avs.time_base.den = C.int(timeBase.Den())
+}
+
+// PrivData Return priv_data
+func (avs *Stream) PrivData() unsafe.Pointer {
+	return avs.priv_data
+}
+
+// SetPrivData Set priv_data
+func (avs *Stream) SetPrivData(pData unsafe.Pointer) {
+	avs.priv_data = pData
+}
+
 // func (avs *Stream) RecommendedEncoderConfiguration() string {
 // 	return C.GoString(avs.recommended_encoder_configuration)
 // }
@@ -79,6 +106,11 @@ func (avs *Stream) TimeBase() libavcodec.Rational {
 // Discard Return discard
 func (avs *Stream) Discard() AvDiscard {
 	return AvDiscard(avs.discard)
+}
+
+// SetDiscard Set discard
+func (avs *Stream) SetDiscard(discard AvDiscard) {
+	avs.discard = C.enum_AVDiscard(discard)
 }
 
 // NeedParsing Return need_parsing
@@ -94,6 +126,11 @@ func (avs *Stream) CodecInfoNbFrames() int {
 // Disposition Return disposition
 func (avs *Stream) Disposition() int {
 	return int(avs.disposition)
+}
+
+// SetDisposition Set disposition
+func (avs *Stream) SetDisposition(disposition int) {
+	avs.disposition = C.int(disposition)
 }
 
 // EventFlags Return event_flags
@@ -181,6 +218,11 @@ func (avs *Stream) Duration() int64 {
 	return int64(avs.duration)
 }
 
+// SetDuration Set duration
+func (avs *Stream) SetDuration(dur int64) {
+	avs.duration = C.int64_t(dur)
+}
+
 // func (avs *Stream) FirstDiscardSample() int64 {
 // 	return int64(avs.first_discard_sample)
 // }
@@ -224,6 +266,11 @@ func (avs *Stream) NbFrames() int64 {
 	return int64(avs.nb_frames)
 }
 
+// SetNbFrames Set nb_frames
+func (avs *Stream) SetNbFrames(nbframes int64) {
+	avs.nb_frames = C.int64_t(nbframes)
+}
+
 // PtsBuffer Return pts_buffer[0]
 func (avs *Stream) PtsBuffer() int64 {
 	return int64(avs.pts_buffer[0])
@@ -246,6 +293,11 @@ func (avs *Stream) PtsWrapReference() int64 {
 // StartTime Return start_time
 func (avs *Stream) StartTime() int64 {
 	return int64(avs.start_time)
+}
+
+// SetStartTime Set start_time
+func (avs *Stream) SetStartTime(starttime int64) {
+	avs.start_time = C.int64_t(starttime)
 }
 
 // Parser Return parser
