@@ -9,19 +9,19 @@ A comprehensive binding to the ffmpeg video/audio manipulation library.
 
 `````go
 
-import "github.com/xueqing/goav/avformat"
+import "github.com/xueqing/goav/libavformat"
 
 func main() {
 
 	filename := "sample.mp4"
 
 	// Register all formats and codecs
-	avformat.AvRegisterAll()
+	libavformat.AvRegisterAll()
 
-	ctx := avformat.AvformatAllocContext()
+	ctx := libavformat.AvformatAllocContext()
 
 	// Open video file
-	if avformat.AvformatOpenInput(&ctx, filename, nil, nil) != 0 {
+	if libavformat.AvformatOpenInput(&ctx, filename, nil, nil) != 0 {
 		log.Println("Error: Couldn't open file.")
 		return
 	}
