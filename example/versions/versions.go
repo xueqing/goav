@@ -3,19 +3,21 @@ package main
 import (
 	"log"
 
-	"github.com/xueqing/goav/avcodec"
-	"github.com/xueqing/goav/avdevice"
-	"github.com/xueqing/goav/avfilter"
-	"github.com/xueqing/goav/avutil"
-	"github.com/xueqing/goav/swresample"
-	"github.com/xueqing/goav/swscale"
+	"github.com/xueqing/goav/libavcodec"
+	"github.com/xueqing/goav/libavdevice"
+	"github.com/xueqing/goav/libavfilter"
+	"github.com/xueqing/goav/libavformat"
+	"github.com/xueqing/goav/libavutil"
+	"github.com/xueqing/goav/libswresample"
+	"github.com/xueqing/goav/libswscale"
 )
 
 func main() {
-	log.Printf("AvFilter Version:\t%v", avfilter.AvfilterVersion())
-	log.Printf("AvDevice Version:\t%v", avdevice.AvdeviceVersion())
-	log.Printf("SWScale Version:\t%v", swscale.SwscaleVersion())
-	log.Printf("AvUtil Version:\t%v", avutil.AvutilVersion())
-	log.Printf("AvCodec Version:\t%v", avcodec.AvcodecVersion())
-	log.Printf("Resample Version:\t%v", swresample.SwresampleLicense())
+	log.Printf("AvCodec  Version:\t%v", libavcodec.AvcodecVersion())
+	log.Printf("AvDevice Version:\t%v", libavdevice.AvdeviceVersion())
+	log.Printf("AvFilter Version:\t%v", libavfilter.AvfilterVersion())
+	log.Printf("AvFormat Version:\t%v", libavformat.AvformatVersion())
+	log.Printf("AvUtil   Version:\t%v", libavutil.AvutilVersion())
+	log.Printf("Resample Version:\t%v", libswresample.SwresampleLicense())
+	log.Printf("SwScale  Version:\t%v", libswscale.SwscaleVersion())
 }
