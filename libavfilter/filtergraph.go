@@ -46,21 +46,21 @@ func (g *AvFilterGraph) AvfilterGraphFree() {
 }
 
 // AvfilterGraphParse Add a graph described by a string to a graph.
-func (g *AvFilterGraph) AvfilterGraphParse(filters string, inputs, outputs *AvFilterInput, logCtx int) int {
+func (g *AvFilterGraph) AvfilterGraphParse(filters string, inputs, outputs *AvFilterInOut, logCtx int) int {
 	return int(C.avfilter_graph_parse((*C.struct_AVFilterGraph)(g),
 		C.CString(filters), (*C.struct_AVFilterInOut)(inputs),
 		(*C.struct_AVFilterInOut)(outputs), unsafe.Pointer(&logCtx)))
 }
 
 // AvfilterGraphParsePtr Add a graph described by a string to a graph.
-func (g *AvFilterGraph) AvfilterGraphParsePtr(filters string, inputs, outputs **AvFilterInput, logCtx int) int {
+func (g *AvFilterGraph) AvfilterGraphParsePtr(filters string, inputs, outputs **AvFilterInOut, logCtx int) int {
 	return int(C.avfilter_graph_parse_ptr((*C.struct_AVFilterGraph)(g),
 		C.CString(filters), (**C.struct_AVFilterInOut)(unsafe.Pointer(inputs)),
 		(**C.struct_AVFilterInOut)(unsafe.Pointer(outputs)), unsafe.Pointer(&logCtx)))
 }
 
 // AvfilterGraphParse2 Add a graph described by a string to a graph.
-func (g *AvFilterGraph) AvfilterGraphParse2(filters string, inputs, outputs **AvFilterInput) int {
+func (g *AvFilterGraph) AvfilterGraphParse2(filters string, inputs, outputs **AvFilterInOut) int {
 	return int(C.avfilter_graph_parse2((*C.struct_AVFilterGraph)(g),
 		C.CString(filters), (**C.struct_AVFilterInOut)(unsafe.Pointer(inputs)),
 		(**C.struct_AVFilterInOut)(unsafe.Pointer(outputs))))

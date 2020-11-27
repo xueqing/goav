@@ -20,7 +20,7 @@ type (
 	AvFilterContext C.struct_AVFilterContext
 	AvFilterLink    C.struct_AVFilterLink
 	AvFilterGraph   C.struct_AVFilterGraph
-	AvFilterInput   C.struct_AVFilterInOut
+	AvFilterInOut   C.struct_AVFilterInOut
 	AvFilterPad     C.struct_AVFilterPad
 	AvDictionary    C.struct_AVDictionary
 	AvClass         C.struct_AVClass
@@ -108,11 +108,11 @@ func AvfilterGetClass() *AvClass {
 }
 
 // AvfilterInoutAlloc Allocate a single Input entry.
-func AvfilterInoutAlloc() *AvFilterInput {
-	return (*AvFilterInput)(C.avfilter_inout_alloc())
+func AvfilterInoutAlloc() *AvFilterInOut {
+	return (*AvFilterInOut)(C.avfilter_inout_alloc())
 }
 
 // AvfilterInoutFree Free the supplied list of Input and set *inout to NULL.
-func AvfilterInoutFree(inout *AvFilterInput) {
+func AvfilterInoutFree(inout *AvFilterInOut) {
 	C.avfilter_inout_free((**C.struct_AVFilterInOut)(unsafe.Pointer(inout)))
 }
