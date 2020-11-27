@@ -55,3 +55,8 @@ func AVRescaleQRnd(a int64, bq, cq AvRational, rnd AvRounding) int64 {
 	return int64(C.av_rescale_q_rnd(C.int64_t(a), C.struct_AVRational(bq),
 		C.struct_AVRational(cq), C.enum_AVRounding(rnd)))
 }
+
+// AvInvQ Invert a rational.
+func AvInvQ(q AvRational) AvRational {
+	return NewAvRational(q.Den(), q.Num())
+}

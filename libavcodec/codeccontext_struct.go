@@ -453,14 +453,29 @@ func (cctx *AvCodecContext) SampleRate() int {
 	return int(cctx.sample_rate)
 }
 
+// SetSampleRate Set sample_rate
+func (cctx *AvCodecContext) SetSampleRate(sampleRate int) {
+	cctx.sample_rate = C.int(sampleRate)
+}
+
 // Channels Return channels
 func (cctx *AvCodecContext) Channels() int {
 	return int(cctx.channels)
 }
 
+// SetChannels Set channels
+func (cctx *AvCodecContext) SetChannels(nc int) {
+	cctx.channels = C.int(nc)
+}
+
 // SampleFmt Return sample_fmt
 func (cctx *AvCodecContext) SampleFmt() AvSampleFormat {
 	return (AvSampleFormat)(cctx.sample_fmt)
+}
+
+// SetSampleFmt Set sample_fmt
+func (cctx *AvCodecContext) SetSampleFmt(sf AvSampleFormat) {
+	cctx.sample_fmt = C.enum_AVSampleFormat(sf)
 }
 
 // FrameSize Return frame_size
@@ -486,6 +501,11 @@ func (cctx *AvCodecContext) Cutoff() int {
 // ChannelLayout Return channel_layout
 func (cctx *AvCodecContext) ChannelLayout() uint64 {
 	return uint64(cctx.channel_layout)
+}
+
+// SetChannelLayout Set channel_layout
+func (cctx *AvCodecContext) SetChannelLayout(cl uint64) {
+	cctx.channel_layout = C.uint64_t(cl)
 }
 
 // RequestChannelLayout Return request_channel_layout
