@@ -6,14 +6,24 @@ import "C"
 
 import "unsafe"
 
+// CodecType Return codec_type
+func (cp *AvCodecParameters) CodecType() AvMediaType {
+	return *((*AvMediaType)(unsafe.Pointer(&cp.codec_type)))
+}
+
 // CodecID Return codec_id
 func (cp *AvCodecParameters) CodecID() AvCodecID {
 	return *((*AvCodecID)(unsafe.Pointer(&cp.codec_id)))
 }
 
-// CodecType Return codec_type
-func (cp *AvCodecParameters) CodecType() AvMediaType {
-	return *((*AvMediaType)(unsafe.Pointer(&cp.codec_type)))
+// Format Return format
+func (cp *AvCodecParameters) Format() int {
+	return *((*int)(unsafe.Pointer(&cp.format)))
+}
+
+// SetFormat Set format
+func (cp *AvCodecParameters) SetFormat(f int) {
+	cp.format = C.int(f)
 }
 
 // Width Return width
@@ -36,14 +46,15 @@ func (cp *AvCodecParameters) SetHeight(h int) {
 	cp.height = C.int(h)
 }
 
-// Channels Return channels
-func (cp *AvCodecParameters) Channels() int {
-	return *((*int)(unsafe.Pointer(&cp.channels)))
+// SampleAspectRatio Return sample_aspect_ratio
+func (cp *AvCodecParameters) SampleAspectRatio() AvRational {
+	return NewAvRational(int(cp.sample_aspect_ratio.num), int(cp.sample_aspect_ratio.den))
 }
 
-// SetChannels Set channels
-func (cp *AvCodecParameters) SetChannels(nc int) {
-	cp.channels = C.int(nc)
+// SetSampleAspectRatio Set sample_aspect_ratio
+func (cp *AvCodecParameters) SetSampleAspectRatio(sampleAspectRatio AvRational) {
+	cp.sample_aspect_ratio.num = C.int(sampleAspectRatio.Num())
+	cp.sample_aspect_ratio.den = C.int(sampleAspectRatio.Den())
 }
 
 // ChannelLayout Return channel_layout
@@ -56,14 +67,14 @@ func (cp *AvCodecParameters) SetChannelLayout(cl uint64) {
 	cp.channel_layout = C.uint64_t(cl)
 }
 
-// Format Return format
-func (cp *AvCodecParameters) Format() int {
-	return *((*int)(unsafe.Pointer(&cp.format)))
+// Channels Return channels
+func (cp *AvCodecParameters) Channels() int {
+	return *((*int)(unsafe.Pointer(&cp.channels)))
 }
 
-// SetFormat Set format
-func (cp *AvCodecParameters) SetFormat(f int) {
-	cp.format = C.int(f)
+// SetChannels Set channels
+func (cp *AvCodecParameters) SetChannels(nc int) {
+	cp.channels = C.int(nc)
 }
 
 // SampleRate Return sample_rate

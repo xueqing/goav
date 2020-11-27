@@ -168,13 +168,13 @@ func (fctx *AvFormatContext) AvDumpFormat(idx int, url string, isOutput int) {
 
 // AvGuessSampleAspectRatio Guess the sample aspect ratio of a frame, based on both the stream and the frame aspect ratio.
 func (fctx *AvFormatContext) AvGuessSampleAspectRatio(st *AvStream, frame *AvFrame) libavcodec.AvRational {
-	return newRational(C.av_guess_sample_aspect_ratio((*C.struct_AVFormatContext)(fctx),
+	return newAvRational(C.av_guess_sample_aspect_ratio((*C.struct_AVFormatContext)(fctx),
 		(*C.struct_AVStream)(st), (*C.struct_AVFrame)(frame)))
 }
 
 // AvGuessFrameRate Guess the frame rate, based on both the container and codec information.
 func (fctx *AvFormatContext) AvGuessFrameRate(st *AvStream, frame *AvFrame) libavcodec.AvRational {
-	return newRational(C.av_guess_frame_rate((*C.struct_AVFormatContext)(fctx),
+	return newAvRational(C.av_guess_frame_rate((*C.struct_AVFormatContext)(fctx),
 		(*C.struct_AVStream)(st), (*C.struct_AVFrame)(frame)))
 }
 

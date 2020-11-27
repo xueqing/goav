@@ -86,7 +86,7 @@ func main() {
 		case libavformat.AvmediaTypeVideo:
 
 			// Get a pointer to the codec context for the video stream
-			pCodecCtxOrig := pFormatContext.Streams()[i].Codec()
+			pCodecCtxOrig := (*libavcodec.AvCodecContext)(unsafe.Pointer(pFormatContext.Streams()[i].Codec()))
 			// Find the decoder for the video stream
 			pCodec := libavcodec.AvcodecFindDecoder(libavcodec.AvCodecID(pCodecCtxOrig.CodecID()))
 			if pCodec == nil {

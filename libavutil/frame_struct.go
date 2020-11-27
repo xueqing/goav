@@ -9,22 +9,12 @@ import (
 	"unsafe"
 )
 
-// Metadata Return metadata
-func (frame *AvFrame) Metadata() *AvDictionary {
-	return (*AvDictionary)(unsafe.Pointer(frame.metadata))
-}
-
 // Data return data
 func (frame *AvFrame) Data() (data [8]*uint8) {
 	for i := range data {
 		data[i] = (*uint8)(frame.data[i])
 	}
 	return
-}
-
-// Pts Return Pts
-func (f *AvFrame) Pts() int64 {
-	return int64(f.pts)
 }
 
 // Linesize Return linesize
@@ -35,9 +25,19 @@ func (frame *AvFrame) Linesize() (linesize [8]int32) {
 	return
 }
 
+// Pts Return Pts
+func (f *AvFrame) Pts() int64 {
+	return int64(f.pts)
+}
+
 // BestEffortTimestamp Return best_effort_timestamp
 func (frame *AvFrame) BestEffortTimestamp() int64 {
 	return int64(frame.best_effort_timestamp)
+}
+
+// Metadata Return metadata
+func (frame *AvFrame) Metadata() *AvDictionary {
+	return (*AvDictionary)(unsafe.Pointer(frame.metadata))
 }
 
 // GetInfo Return frame info.

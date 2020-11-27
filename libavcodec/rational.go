@@ -17,8 +17,8 @@ package libavcodec
 import "C"
 import "fmt"
 
-// NewRational ...
-func NewRational(num, den int) AvRational {
+// NewAvRational ...
+func NewAvRational(num, den int) AvRational {
 	return AvRational{
 		num: C.int(num),
 		den: C.int(den),
