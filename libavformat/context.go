@@ -32,6 +32,11 @@ func (fctx *AvFormatContext) AvFmtCtxGetDurationEstimationMethod() AvDurationEst
 	return (AvDurationEstimationMethod)(C.av_fmt_ctx_get_duration_estimation_method((*C.struct_AVFormatContext)(fctx)))
 }
 
+// AvformatAllocContext Allocate an Context.
+func AvformatAllocContext() *AvFormatContext {
+	return (*AvFormatContext)(C.avformat_alloc_context())
+}
+
 // AvformatFreeContext Free an Context and all its streams.
 func (fctx *AvFormatContext) AvformatFreeContext() {
 	C.avformat_free_context((*C.struct_AVFormatContext)(fctx))
@@ -43,9 +48,42 @@ func (fctx *AvFormatContext) AvformatNewStream(codec *AvCodec) *AvStream {
 		(*C.struct_AVCodec)(codec)))
 }
 
+// AvformatNewStream2 Add a new stream to a media file.
+func (fctx *AvFormatContext) AvformatNewStream2(codec *AvCodec) *AvStream {
+	stream := (*AvStream)(C.avformat_new_stream((*C.struct_AVFormatContext)(fctx), (*C.struct_AVCodec)(codec)))
+	stream.codec.pix_fmt = int32(libavcodec.AvPixFmtYuv)
+	stream.codec.width = 640
+	stream.codec.height = 480
+	stream.time_base.num = 1
+	stream.time_base.num = 25
+	return stream
+}
+
 // AvNewProgram ...
 func (fctx *AvFormatContext) AvNewProgram(id int) *AvProgram {
 	return (*AvProgram)(C.av_new_program((*C.struct_AVFormatContext)(fctx), C.int(id)))
+}
+
+// AvformatAllocOutputContext2 Allocate an Context for an output format.
+// avformat_free_context() can be used to free the context and everything allocated by the framework within it.
+func AvformatAllocOutputContext2(ctx **AvFormatContext, oFmt *AvOutputFormat, formatName, fileNmae string) int {
+	cFormatName := C.CString(formatName)
+	defer C.free(unsafe.Pointer(cFormatName))
+
+	cFilename := C.CString(fileNmae)
+	defer C.free(unsafe.Pointer(cFilename))
+
+	return int(C.avformat_alloc_output_context2((**C.struct_AVFormatContext)(unsafe.Pointer(ctx)),
+		(*C.struct_AVOutputFormat)(oFmt), cFormatName, cFilename))
+}
+
+// AvformatOpenInput Open an input stream and read the header.
+func AvformatOpenInput(ctx **AvFormatContext, url string, format *AvInputFormat, options **libavutil.AvDictionary) int {
+	cURL := C.CString(url)
+	defer C.free(unsafe.Pointer(cURL))
+
+	return int(C.avformat_open_input((**C.struct_AVFormatContext)(unsafe.Pointer(ctx)),
+		cURL, (*C.struct_AVInputFormat)(format), (**C.struct_AVDictionary)(unsafe.Pointer(options))))
 }
 
 // AvformatFindStreamInfo Read packets of a media file to get stream information.
@@ -61,7 +99,7 @@ func (fctx *AvFormatContext) AvFindProgramFromStream(last *AvProgram, streamIdx 
 }
 
 // AvFindBestStream Find the "best" stream in the file.
-func AvFindBestStream(fctx *AvFormatContext, typ AvMediaType, wantedStreamNb, relatedStream int, decoderRet **AvCodec, flags int) int {
+func (fctx *AvFormatContext) AvFindBestStream(typ AvMediaType, wantedStreamNb, relatedStream int, decoderRet **AvCodec, flags int) int {
 	return int(C.av_find_best_stream((*C.struct_AVFormatContext)(fctx),
 		(C.enum_AVMediaType)(typ), C.int(wantedStreamNb), C.int(relatedStream),
 		(**C.struct_AVCodec)(unsafe.Pointer(decoderRet)), C.int(flags)))
@@ -190,17 +228,6 @@ func (fctx *AvFormatContext) AvformatMatchStreamSpecifier(st *AvStream, spec str
 // AvformatQueueAttachedPictures ...
 func (fctx *AvFormatContext) AvformatQueueAttachedPictures() int {
 	return int(C.avformat_queue_attached_pictures((*C.struct_AVFormatContext)(fctx)))
-}
-
-// AvformatNewStream2 Add a new stream to a media file.
-func (fctx *AvFormatContext) AvformatNewStream2(codec *AvCodec) *AvStream {
-	stream := (*AvStream)(C.avformat_new_stream((*C.struct_AVFormatContext)(fctx), (*C.struct_AVCodec)(codec)))
-	stream.codec.pix_fmt = int32(libavcodec.AvPixFmtYuv)
-	stream.codec.width = 640
-	stream.codec.height = 480
-	stream.time_base.num = 1
-	stream.time_base.num = 25
-	return stream
 }
 
 // //av_format_control_message av_format_get_control_message_cb (const AvFormatContext *fctx)

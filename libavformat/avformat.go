@@ -22,7 +22,6 @@ import (
 	"unsafe"
 
 	"github.com/xueqing/goav/libavcodec"
-	"github.com/xueqing/goav/libavutil"
 )
 
 type (
@@ -56,23 +55,6 @@ type (
 	File C.FILE
 )
 
-// AvGetPacket Allocate and read the payload of a packet and initialize its fields with default values.
-func (ctxt *AvIOContext) AvGetPacket(pkt *libavcodec.AvPacket, size int) int {
-	return int(C.av_get_packet((*C.struct_AVIOContext)(ctxt),
-		toCPacket(pkt), C.int(size)))
-}
-
-// AvAppendPacket Read data and append it to the current content of the Packet.
-func (ctxt *AvIOContext) AvAppendPacket(pkt *libavcodec.AvPacket, size int) int {
-	return int(C.av_append_packet((*C.struct_AVIOContext)(ctxt),
-		toCPacket(pkt), C.int(size)))
-}
-
-// Close ...
-func (ctxt *AvIOContext) Close() error {
-	return libavutil.ErrorFromCode(int(C.avio_close((*C.AVIOContext)(unsafe.Pointer(ctxt)))))
-}
-
 // AvformatVersion Return the LIBAvFORMAT_VERSION_INT constant.
 func AvformatVersion() uint {
 	return uint(C.avformat_version())
@@ -98,32 +80,9 @@ func AvformatNetworkDeinit() int {
 	return int(C.avformat_network_deinit())
 }
 
-// AvformatAllocContext Allocate an Context.
-func AvformatAllocContext() *AvFormatContext {
-	return (*AvFormatContext)(C.avformat_alloc_context())
-}
-
 // AvformatGetClass Get the Class for Context.
 func AvformatGetClass() *AvClass {
 	return (*AvClass)(C.avformat_get_class())
-}
-
-// AvStreamGetSideData Get side information from stream.
-func (s *AvStream) AvStreamGetSideData(typ AvPacketSideDataType, size int) *uint8 {
-	return (*uint8)(C.av_stream_get_side_data((*C.struct_AVStream)(s),
-		(C.enum_AVPacketSideDataType)(typ), (*C.int)(unsafe.Pointer(&size))))
-}
-
-// AvformatAllocOutputContext2 Allocate an Context for an output format.
-func AvformatAllocOutputContext2(ctx **AvFormatContext, oFmt *AvOutputFormat, formatName, fileNmae string) int {
-	cFormatName := C.CString(formatName)
-	defer C.free(unsafe.Pointer(cFormatName))
-
-	cFilename := C.CString(fileNmae)
-	defer C.free(unsafe.Pointer(cFilename))
-
-	return int(C.avformat_alloc_output_context2((**C.struct_AVFormatContext)(unsafe.Pointer(ctx)),
-		(*C.struct_AVOutputFormat)(oFmt), cFormatName, cFilename))
 }
 
 // AvFindInputFormat Find InputFormat based on the short name of the input format.
@@ -152,16 +111,6 @@ func AvProbeInputFormat3(pd *AvProbeData, isOpened int, scoreRet *int) *AvInputF
 		C.int(isOpened), (*C.int)(unsafe.Pointer(scoreRet))))
 }
 
-// AvProbeInputBuffer2 Probe a bytestream to determine the input format.
-func AvProbeInputBuffer2(pb *AvIOContext, format **AvInputFormat, url string, logCtx int, offset, maxProbeSize uint) int {
-	cURL := C.CString(url)
-	defer C.free(unsafe.Pointer(cURL))
-
-	return int(C.av_probe_input_buffer2((*C.struct_AVIOContext)(pb),
-		(**C.struct_AVInputFormat)(unsafe.Pointer(format)), cURL,
-		unsafe.Pointer(&logCtx), C.uint(offset), C.uint(maxProbeSize)))
-}
-
 // AvProbeInputBuffer Like av_probe_input_buffer2() but returns 0 on success.
 func AvProbeInputBuffer(pb *AvIOContext, format **AvInputFormat, url string, logCtx int, offset, maxProbeSize uint) int {
 	cURL := C.CString(url)
@@ -172,13 +121,14 @@ func AvProbeInputBuffer(pb *AvIOContext, format **AvInputFormat, url string, log
 		unsafe.Pointer(&logCtx), C.uint(offset), C.uint(maxProbeSize)))
 }
 
-// AvformatOpenInput Open an input stream and read the header.
-func AvformatOpenInput(ps **AvFormatContext, url string, format *AvInputFormat, options **libavutil.AvDictionary) int {
+// AvProbeInputBuffer2 Probe a bytestream to determine the input format.
+func AvProbeInputBuffer2(pb *AvIOContext, format **AvInputFormat, url string, logCtx int, offset, maxProbeSize uint) int {
 	cURL := C.CString(url)
 	defer C.free(unsafe.Pointer(cURL))
 
-	return int(C.avformat_open_input((**C.struct_AVFormatContext)(unsafe.Pointer(ps)),
-		cURL, (*C.struct_AVInputFormat)(format), (**C.struct_AVDictionary)(unsafe.Pointer(options))))
+	return int(C.av_probe_input_buffer2((*C.struct_AVIOContext)(pb),
+		(**C.struct_AVInputFormat)(unsafe.Pointer(format)), cURL,
+		unsafe.Pointer(&logCtx), C.uint(offset), C.uint(maxProbeSize)))
 }
 
 // AvGuessFormat Return the output format in the list of registered output formats which best matches the provided parameters, or return NULL if there is no match.
@@ -355,12 +305,4 @@ func AvformatGetMovVideoTags() *AvCodecTag {
 // AvformatGetMovAudioTags Return the table mapping MOV FourCCs for audio to AvCodecID.
 func AvformatGetMovAudioTags() *AvCodecTag {
 	return (*AvCodecTag)(C.avformat_get_mov_audio_tags())
-}
-
-// AvIOOpen Create and initialize a AVIOContext for accessing the resource indicated by url.
-func AvIOOpen(url string, flags int) (ioctx *AvIOContext, err error) {
-	cURL := C.CString(url)
-	defer C.free(unsafe.Pointer(cURL))
-	err = libavutil.ErrorFromCode(int(C.avio_open((**C.AVIOContext)(unsafe.Pointer(&ioctx)), cURL, C.int(flags))))
-	return
 }

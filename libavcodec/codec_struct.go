@@ -32,6 +32,11 @@ func (codec *AvCodec) Name() string {
 	return C.GoString(codec.name)
 }
 
+// Capabilities Return capabilities
+func (codec *AvCodec) Capabilities() int {
+	return int(codec.capabilities)
+}
+
 // PixFmts Return pix_fmts
 func (codec *AvCodec) PixFmts() []AvPixelFormat {
 	cnt := int(C.count_pix_fmts(codec.pix_fmts))
@@ -39,7 +44,7 @@ func (codec *AvCodec) PixFmts() []AvPixelFormat {
 		return nil
 	}
 	return *(*[]AvPixelFormat)(unsafe.Pointer(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(&codec.pix_fmts)),
+		Data: uintptr(unsafe.Pointer(codec.pix_fmts)),
 		Len:  cnt,
 		Cap:  cnt,
 	}))
@@ -52,7 +57,7 @@ func (codec *AvCodec) SampleFmts() []AvSampleFormat {
 		return nil
 	}
 	return *(*[]AvSampleFormat)(unsafe.Pointer(&reflect.SliceHeader{
-		Data: uintptr(unsafe.Pointer(&codec.sample_fmts)),
+		Data: uintptr(unsafe.Pointer(codec.sample_fmts)),
 		Len:  cnt,
 		Cap:  cnt,
 	}))

@@ -33,9 +33,9 @@ func (cctx *AvCodecContext) SetCodecType(ctype AvMediaType) {
 	cctx.codec_type = C.enum_AVMediaType(ctype)
 }
 
-// ContextModel Return context_model
-func (cctx *AvCodecContext) ContextModel() int {
-	return int(cctx.context_model)
+// Codec Return codec
+func (cctx *AvCodecContext) Codec() *AvCodec {
+	return (*AvCodec)(cctx.codec)
 }
 
 // CodecID Return codec_id

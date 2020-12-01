@@ -37,6 +37,21 @@ func (p *AvPacket) Data() *uint8 {
 	return (*uint8)(p.data)
 }
 
+// SetData Set data
+func (p *AvPacket) SetData(data *uint8) {
+	p.data = (*C.uint8_t)(data)
+}
+
+// Size Return size
+func (p *AvPacket) Size() int {
+	return int(p.size)
+}
+
+// SetSize Set size
+func (p *AvPacket) SetSize(size int) {
+	p.size = C.int(size)
+}
+
 // StreamIndex Return stream_index
 func (p *AvPacket) StreamIndex() int {
 	return int(p.stream_index)
@@ -55,11 +70,6 @@ func (p *AvPacket) Flags() int {
 // SetFlags Set flags
 func (p *AvPacket) SetFlags(flags int) {
 	p.flags = C.int(flags)
-}
-
-// Size Return size
-func (p *AvPacket) Size() int {
-	return int(p.size)
 }
 
 // SideDataElems Return side_data_elems

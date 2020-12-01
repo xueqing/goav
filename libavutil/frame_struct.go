@@ -30,6 +30,11 @@ func (f *AvFrame) Pts() int64 {
 	return int64(f.pts)
 }
 
+// SetPts Set Pts
+func (f *AvFrame) SetPts(pts int64) {
+	f.pts = C.int64_t(pts)
+}
+
 // BestEffortTimestamp Return best_effort_timestamp
 func (frame *AvFrame) BestEffortTimestamp() int64 {
 	return int64(frame.best_effort_timestamp)
