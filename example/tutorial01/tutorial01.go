@@ -81,8 +81,9 @@ func main() {
 
 	// Find the first video stream
 	for i := 0; i < int(pFormatContext.NbStreams()); i++ {
-		switch pFormatContext.Streams()[i].CodecParameters().CodecType() {
-		case libavformat.AvmediaTypeVideo:
+		codecType := libavutil.AvMediaType(pFormatContext.Streams()[i].CodecParameters().CodecType())
+		switch codecType {
+		case libavutil.AvmediaTypeVideo:
 
 			// Get a pointer to the codec context for the video stream
 			pCodecCtxOrig := (*libavcodec.AvCodecContext)(unsafe.Pointer(pFormatContext.Streams()[i].Codec()))
