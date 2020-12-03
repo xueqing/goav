@@ -124,15 +124,6 @@ func GetPicture(frame *AvFrame) (img *image.YCbCr, err error) {
 	return
 }
 
-// SetPicture sets the image pointer of |frame| to the image pointers of |img|
-func SetPicture(frame *AvFrame, img *image.YCbCr) {
-	d := frame.Data()
-	// l := Linesize(frame)
-	// FIXME: Save the original pointers somewhere, this is a memory leak
-	d[0] = (*uint8)(unsafe.Pointer(&img.Y[0]))
-	// d[1] = (*uint8)(unsafe.Pointer(&img.Cb[0]))
-}
-
 // GetPictureRGB ...
 func GetPictureRGB(frame *AvFrame) (img *image.RGBA, err error) {
 	w := int(frame.linesize[0])

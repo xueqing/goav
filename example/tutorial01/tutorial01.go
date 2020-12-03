@@ -47,9 +47,8 @@ func SaveFrame(frame *libavutil.AvFrame, width, height, frameNumber int) {
 
 	// Write pixel data
 	for y := 0; y < height; y++ {
-		data0 := frame.Data()[0]
 		buf := make([]byte, width*3)
-		startPos := uintptr(unsafe.Pointer(data0)) + uintptr(y)*uintptr(frame.Linesize()[0])
+		startPos := uintptr(unsafe.Pointer(*frame.Data())) + uintptr(y)*uintptr(*frame.Linesize())
 		for i := 0; i < width*3; i++ {
 			element := *(*uint8)(unsafe.Pointer(startPos + uintptr(i)))
 			buf[i] = element
@@ -122,12 +121,10 @@ func main() {
 			buffer := libavutil.AvMalloc(numBytes)
 
 			// Assign appropriate parts of buffer to image planes in pFrameRGB
-			avp := (*libavcodec.AvPicture)(unsafe.Pointer(pFrameRGB))
-			avp.AvpictureFill((*uint8)(buffer), libavcodec.AvPixFmtRgb24, pCodecCtx.Width(), pCodecCtx.Height())
-			// if ret := libavutil.AvImageFillArrays(libavutil.Data(pFrameRGB), libavutil.Linesize(pFrameRGB), (*uint8)(buffer),
-			// 	libavutil.AvPixelFormat(libavcodec.AvPixFmtRgb24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
-			// 	fmt.Printf("Error while filling an image: %s\n", libavutil.ErrorFromCode(ret))
-			// }
+			if ret := libavutil.AvImageFillArrays(pFrameRGB.Data(), pFrameRGB.Linesize(), (*uint8)(buffer),
+				libavutil.AvPixelFormat(libavcodec.AvPixFmtRgb24), pCodecCtx.Width(), pCodecCtx.Height(), 1); ret < 0 {
+				fmt.Printf("Error while filling an image: %s\n", libavutil.ErrorFromCode(ret))
+			}
 
 			// initialize SWS context for software scaling
 			swsCtx := libswscale.SwsGetcontext(

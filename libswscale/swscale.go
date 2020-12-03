@@ -73,12 +73,12 @@ func SwsScale(ctx *SwsContext, srcSlice *uint8, srcStride int, srcSliceY, srcSli
 }
 
 // SwsScale2 refer SwsScale
-func SwsScale2(ctx *SwsContext, srcSlice [8]*uint8, srcStride [8]int32, srcSliceY, srcSliceH int, dst [8]*uint8, dstStride [8]int32) int {
+func SwsScale2(ctx *SwsContext, srcSlice **uint8, srcStride *int32, srcSliceY, srcSliceH int, dst **uint8, dstStride *int32) int {
 	cCtx := (*C.struct_SwsContext)(unsafe.Pointer(ctx))
-	cSrcSlice := (**C.uint8_t)(unsafe.Pointer(&srcSlice[0]))
-	cSrcStride := (*C.int)(unsafe.Pointer(&srcStride[0]))
-	cDst := (**C.uint8_t)(unsafe.Pointer(&dst[0]))
-	cDstStride := (*C.int)(unsafe.Pointer(&dstStride))
+	cSrcSlice := (**C.uint8_t)(unsafe.Pointer(srcSlice))
+	cSrcStride := (*C.int)(srcStride)
+	cDst := (**C.uint8_t)(unsafe.Pointer(dst))
+	cDstStride := (*C.int)(dstStride)
 	return int(C.sws_scale(cCtx, cSrcSlice, cSrcStride,
 		C.int(srcSliceY), C.int(srcSliceH), cDst, cDstStride))
 }
