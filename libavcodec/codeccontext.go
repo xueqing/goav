@@ -13,7 +13,7 @@ import (
 // AvcodecFreeContext Free the codec context and everything associated with it
 // and write NULL to the provided pointer.
 func (cctx *AvCodecContext) AvcodecFreeContext() {
-	C.avcodec_free_context((**C.struct_AVCodecContext)(unsafe.Pointer(cctx)))
+	C.avcodec_free_context((**C.struct_AVCodecContext)(unsafe.Pointer(&cctx)))
 }
 
 // AvcodecGetContextDefaults3 Set the fields of the given Context to default values
