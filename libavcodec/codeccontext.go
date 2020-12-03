@@ -78,6 +78,51 @@ func (cctx *AvCodecContext) AvcodecDecodeSubtitle2(sub *AvSubtitle, gotSubPtr *i
 		(*C.struct_AVPacket)(pkt)))
 }
 
+// AvcodecSendPacket Supply raw packet data as input to a decoder.
+func (cctx *AvCodecContext) AvcodecSendPacket(pkt *AvPacket) int {
+	return (int)(C.avcodec_send_packet((*C.struct_AVCodecContext)(cctx), (*C.struct_AVPacket)(pkt)))
+}
+
+// AvcodecReceiveFrame Return decoded output data from a decoder.
+func (cctx *AvCodecContext) AvcodecReceiveFrame(frame *AvFrame) int {
+	return (int)(C.avcodec_receive_frame((*C.struct_AVCodecContext)(cctx), (*C.struct_AVFrame)(frame)))
+}
+
+// AvcodecSendFrame Supply a raw video or audio frame to the encoder.
+func (cctx *AvCodecContext) AvcodecSendFrame(frame *AvFrame) int {
+	return (int)(C.avcodec_send_frame((*C.struct_AVCodecContext)(cctx), (*C.struct_AVFrame)(frame)))
+}
+
+// AvcodecReceivePacket Return decoded output data from a decoder.
+func (cctx *AvCodecContext) AvcodecReceivePacket(pkt *AvPacket) int {
+	return (int)(C.avcodec_receive_packet((*C.struct_AVCodecContext)(cctx), (*C.struct_AVPacket)(pkt)))
+}
+
+// AvParserInit ...
+func AvParserInit(codecID int) *AvCodecParserContext {
+	return (*AvCodecParserContext)(C.av_parser_init(C.int(codecID)))
+}
+
+// AvParserParse2 Parse a packet.
+func (cctx *AvCodecContext) AvParserParse2(cpctx *AvCodecParserContext, poutbuf **uint8, poutbufSize *int, buf *uint8, bufSize int, pts, dts, pos int64) int {
+	return int(C.av_parser_parse2((*C.struct_AVCodecParserContext)(cpctx),
+		(*C.struct_AVCodecContext)(cctx), (**C.uint8_t)(unsafe.Pointer(poutbuf)),
+		(*C.int)(unsafe.Pointer(poutbufSize)), (*C.uint8_t)(buf), C.int(bufSize),
+		(C.int64_t)(pts), (C.int64_t)(dts), (C.int64_t)(pos)))
+}
+
+// AvParserChange Return 0 if the output buffer is a subset of the input, 1 if it is allocated and must be freed
+func (cctx *AvCodecContext) AvParserChange(cpctx *AvCodecParserContext, poutbuf **uint8, poutbufSize *int, buf *uint8, bufSize, keyFrame int) int {
+	return int(C.av_parser_change((*C.struct_AVCodecParserContext)(cpctx),
+		(*C.struct_AVCodecContext)(cctx), (**C.uint8_t)(unsafe.Pointer(poutbuf)),
+		(*C.int)(unsafe.Pointer(poutbufSize)), (*C.uint8_t)(buf), C.int(bufSize), C.int(keyFrame)))
+}
+
+// AvParserClose ...
+func AvParserClose(cpctx *AvCodecParserContext) {
+	C.av_parser_close((*C.struct_AVCodecParserContext)(cpctx))
+}
+
 // AvcodecEncodeSubtitle ...
 func (cctx *AvCodecContext) AvcodecEncodeSubtitle(buf *uint8, bufSize int, sub *AvSubtitle) int {
 	return int(C.avcodec_encode_subtitle((*C.struct_AVCodecContext)(cctx),
@@ -103,46 +148,6 @@ func (cctx *AvCodecContext) AvGetAudioFrameDuration(frameBytes int) int {
 // AvcodecIsOpen Return a positive value if s is open (i.e. avcodec_open2() was called on it with no corresponding avcodec_close()), 0 otherwise.
 func (cctx *AvCodecContext) AvcodecIsOpen() int {
 	return int(C.avcodec_is_open((*C.struct_AVCodecContext)(cctx)))
-}
-
-// AvParserParse2 Parse a packet.
-func (cctx *AvCodecContext) AvParserParse2(cpctx *AvCodecParserContext, poutbuf **uint8, poutbufSize *int, buf *uint8, bufSize int, pts, dts, pos int64) int {
-	return int(C.av_parser_parse2((*C.struct_AVCodecParserContext)(cpctx),
-		(*C.struct_AVCodecContext)(cctx), (**C.uint8_t)(unsafe.Pointer(poutbuf)),
-		(*C.int)(unsafe.Pointer(poutbufSize)), (*C.uint8_t)(buf), C.int(bufSize),
-		(C.int64_t)(pts), (C.int64_t)(dts), (C.int64_t)(pos)))
-}
-
-// AvParserChange Return 0 if the output buffer is a subset of the input, 1 if it is allocated and must be freed
-func (cctx *AvCodecContext) AvParserChange(cpctx *AvCodecParserContext, poutbuf **uint8, poutbufSize *int, buf *uint8, bufSize, keyFrame int) int {
-	return int(C.av_parser_change((*C.struct_AVCodecParserContext)(cpctx),
-		(*C.struct_AVCodecContext)(cctx), (**C.uint8_t)(unsafe.Pointer(poutbuf)),
-		(*C.int)(unsafe.Pointer(poutbufSize)), (*C.uint8_t)(buf), C.int(bufSize), C.int(keyFrame)))
-}
-
-// SetEncodeParams ...
-func (cctx *AvCodecContext) SetEncodeParams(width int, height int, pixFmt AvPixelFormat) {
-	cctx.SetEncodeParams2(width, height, pixFmt, false /*no b frames*/, 10)
-}
-
-// AvcodecSendPacket Supply raw packet data as input to a decoder.
-func (cctx *AvCodecContext) AvcodecSendPacket(pkt *AvPacket) int {
-	return (int)(C.avcodec_send_packet((*C.struct_AVCodecContext)(cctx), (*C.struct_AVPacket)(pkt)))
-}
-
-// AvcodecReceiveFrame Return decoded output data from a decoder.
-func (cctx *AvCodecContext) AvcodecReceiveFrame(frame *AvFrame) int {
-	return (int)(C.avcodec_receive_frame((*C.struct_AVCodecContext)(cctx), (*C.struct_AVFrame)(frame)))
-}
-
-// AvParserInit ...
-func AvParserInit(codecID int) *AvCodecParserContext {
-	return (*AvCodecParserContext)(C.av_parser_init(C.int(codecID)))
-}
-
-// AvParserClose ...
-func AvParserClose(cpctx *AvCodecParserContext) {
-	C.av_parser_close((*C.struct_AVCodecParserContext)(cpctx))
 }
 
 // AvcodecEncodeAudio2 deprecated

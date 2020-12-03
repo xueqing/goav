@@ -857,3 +857,8 @@ func (cctx *AvCodecContext) SetEncodeParams2(width int, height int, pxlFmt AvPix
 	cctx.pix_fmt = int32(pxlFmt)
 	// C.av_opt_set(cctx.priv_data, "preset", "ultrafast", 0)
 }
+
+// SetEncodeParams ...
+func (cctx *AvCodecContext) SetEncodeParams(width int, height int, pixFmt AvPixelFormat) {
+	cctx.SetEncodeParams2(width, height, pixFmt, false /*no b frames*/, 10)
+}
