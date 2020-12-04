@@ -1,5 +1,12 @@
 # ChangeLog
 
+## [v1.1.2] - 2020/12/4
+
+- type name: keep consistent with C
+- fix avcodec_free_context
+- add some api
+- remove deprecated api
+
 ## [v1.1.1] - 2020/11/26
 
 - add C.enum_AVRounding
