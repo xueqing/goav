@@ -149,39 +149,3 @@ func (cctx *AvCodecContext) AvGetAudioFrameDuration(frameBytes int) int {
 func (cctx *AvCodecContext) AvcodecIsOpen() int {
 	return int(C.avcodec_is_open((*C.struct_AVCodecContext)(cctx)))
 }
-
-// AvcodecEncodeAudio2 deprecated
-func (cctx *AvCodecContext) AvcodecEncodeAudio2(pkt *AvPacket, frame *AvFrame, gotPacketPtr *int) int {
-	var gotPacket C.int
-	ret := int(C.avcodec_encode_audio2((*C.struct_AVCodecContext)(cctx),
-		(*C.struct_AVPacket)(pkt), (*C.struct_AVFrame)(frame), &gotPacket))
-	*gotPacketPtr = int(gotPacket)
-	return ret
-}
-
-// AvcodecEncodeVideo2 deprecated
-func (cctx *AvCodecContext) AvcodecEncodeVideo2(pkt *AvPacket, frame *AvFrame, gotPacketPtr *int) int {
-	var gotPacket C.int
-	ret := int(C.avcodec_encode_video2((*C.struct_AVCodecContext)(cctx),
-		(*C.struct_AVPacket)(pkt), (*C.struct_AVFrame)(frame), &gotPacket))
-	*gotPacketPtr = int(gotPacket)
-	return ret
-}
-
-// AvcodecDecodeAudio4 deprecated
-func (cctx *AvCodecContext) AvcodecDecodeAudio4(frame *AvFrame, gotFramePtr *int, pkt *AvPacket) int {
-	var gotFrame C.int
-	ret := int(C.avcodec_decode_audio4((*C.struct_AVCodecContext)(cctx),
-		(*C.struct_AVFrame)(frame), &gotFrame, (*C.struct_AVPacket)(pkt)))
-	*gotFramePtr = int(gotFrame)
-	return ret
-}
-
-// AvcodecDecodeVideo2 deprecated
-func (cctx *AvCodecContext) AvcodecDecodeVideo2(frame *AvFrame, gotFramePtr *int, pkt *AvPacket) int {
-	var gotFrame C.int
-	ret := int(C.avcodec_decode_video2((*C.struct_AVCodecContext)(cctx),
-		(*C.struct_AVFrame)(frame), &gotFrame, (*C.struct_AVPacket)(pkt)))
-	*gotFramePtr = int(gotFrame)
-	return ret
-}
