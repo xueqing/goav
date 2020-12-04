@@ -16,13 +16,13 @@ import (
 )
 
 type (
-	Options       C.struct_AVOptions
+	AvOptions     C.struct_AVOptions
 	AvTree        C.struct_AVTree
-	Rational      C.struct_AVRational
-	Rounding      C.enum_AVRounding
-	MediaType     C.enum_AVMediaType
+	AvRational    C.struct_AVRational
+	AvRounding    C.enum_AVRounding
+	AvMediaType   C.enum_AVMediaType
 	AvPictureType C.enum_AVPictureType
-	PixelFormat   C.enum_AVPixelFormat
+	AvPixelFormat C.enum_AVPixelFormat
 	File          C.FILE
 )
 
@@ -42,13 +42,13 @@ func AvutilLicense() string {
 }
 
 // AvGetMediaTypeString Return a string describing the media_type enum, NULL if media_type is unknown.
-func AvGetMediaTypeString(mt MediaType) string {
-	return C.GoString(C.av_get_media_type_string((C.enum_AVMediaType)(mt)))
+func AvGetMediaTypeString(typ AvMediaType) string {
+	return C.GoString(C.av_get_media_type_string((C.enum_AVMediaType)(typ)))
 }
 
 // AvGetPictureTypeChar Return a single letter to describe the given picture type pict_type.
-func AvGetPictureTypeChar(pt AvPictureType) string {
-	return string(C.av_get_picture_type_char((C.enum_AVPictureType)(pt)))
+func AvGetPictureTypeChar(typ AvPictureType) string {
+	return string(C.av_get_picture_type_char((C.enum_AVPictureType)(typ)))
 }
 
 // AvXIfNull Return x default pointer in case p is NULL.
@@ -57,17 +57,18 @@ func AvXIfNull(p, x int) {
 }
 
 // AvIntListLengthForSize Compute the length of an integer list.
-func AvIntListLengthForSize(e uint, l int, t uint64) uint {
-	return uint(C.av_int_list_length_for_size(C.uint(e), unsafe.Pointer(&l), (C.uint64_t)(t)))
+func AvIntListLengthForSize(elsize uint, list int, term uint64) uint {
+	return uint(C.av_int_list_length_for_size(C.uint(elsize),
+		unsafe.Pointer(&list), (C.uint64_t)(term)))
 }
 
 // AvFopenUtf8 Open a file using a UTF-8 filename.
-func AvFopenUtf8(p, m string) *File {
-	f := C.av_fopen_utf8(C.CString(p), C.CString(m))
+func AvFopenUtf8(path, mode string) *File {
+	f := C.av_fopen_utf8(C.CString(path), C.CString(mode))
 	return (*File)(f)
 }
 
 // AvGetTimeBaseQ Return the fractional representation of the internal time base.
-func AvGetTimeBaseQ() Rational {
-	return (Rational)(C.av_get_time_base_q())
+func AvGetTimeBaseQ() AvRational {
+	return (AvRational)(C.av_get_time_base_q())
 }

@@ -85,7 +85,7 @@ const (
 )
 
 // String ...
-func (pf PixelFormat) String() string {
+func (pf AvPixelFormat) String() string {
 	switch int(pf) {
 	case AvPixFmtYuv420P9:
 		return "YUV420P9"

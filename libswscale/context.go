@@ -11,26 +11,37 @@ import (
 )
 
 // SwsAllocContext Allocate an empty Context.
-func SwsAllocContext() *Context {
-	return (*Context)(C.sws_alloc_context())
+func SwsAllocContext() *SwsContext {
+	return (*SwsContext)(C.sws_alloc_context())
 }
 
 // SwsInitContext Initialize the swscaler context sws_context.
-func SwsInitContext(ctxt *Context, sf, df *Filter) int {
-	return int(C.sws_init_context((*C.struct_SwsContext)(ctxt), (*C.struct_SwsFilter)(sf), (*C.struct_SwsFilter)(df)))
+func SwsInitContext(ctx *SwsContext, srcFilter, dstFilter *SwsFilter) int {
+	return int(C.sws_init_context((*C.struct_SwsContext)(ctx),
+		(*C.struct_SwsFilter)(srcFilter), (*C.struct_SwsFilter)(dstFilter)))
 }
 
 // SwsFreecontext Free the swscaler context swsContext.
-func SwsFreecontext(ctxt *Context) {
-	C.sws_freeContext((*C.struct_SwsContext)(ctxt))
+func SwsFreecontext(ctx *SwsContext) {
+	C.sws_freeContext((*C.struct_SwsContext)(ctx))
 }
 
 // SwsGetcontext Allocate and return an Context.
-func SwsGetcontext(sw, sh int, sf PixelFormat, dw, dh int, df PixelFormat, f int, sfl, dfl *Filter, p *int) *Context {
-	return (*Context)(C.sws_getContext(C.int(sw), C.int(sh), (C.enum_AVPixelFormat)(sf), C.int(dw), C.int(dh), (C.enum_AVPixelFormat)(df), C.int(f), (*C.struct_SwsFilter)(sfl), (*C.struct_SwsFilter)(dfl), (*C.double)(unsafe.Pointer(p))))
+func SwsGetcontext(srcW, srcH int, srcFormat AvPixelFormat, dstW, dstH int, dstFormat AvPixelFormat,
+	flags int, srcFilter, dstFilter *SwsFilter, param *int) *SwsContext {
+	return (*SwsContext)(C.sws_getContext(
+		C.int(srcW), C.int(srcH), (C.enum_AVPixelFormat)(srcFormat),
+		C.int(dstW), C.int(dstH), (C.enum_AVPixelFormat)(dstFormat),
+		C.int(flags), (*C.struct_SwsFilter)(srcFilter),
+		(*C.struct_SwsFilter)(dstFilter), (*C.double)(unsafe.Pointer(param))))
 }
 
 // SwsGetcachedcontext Check if context can be reused, otherwise reallocate a new one.
-func SwsGetcachedcontext(ctxt *Context, sw, sh int, sf PixelFormat, dw, dh int, df PixelFormat, f int, sfl, dfl *Filter, p *float64) *Context {
-	return (*Context)(C.sws_getCachedContext((*C.struct_SwsContext)(ctxt), C.int(sw), C.int(sh), (C.enum_AVPixelFormat)(sf), C.int(dw), C.int(dh), (C.enum_AVPixelFormat)(df), C.int(f), (*C.struct_SwsFilter)(sfl), (*C.struct_SwsFilter)(dfl), (*C.double)(p)))
+func SwsGetcachedcontext(ctx *SwsContext, srcW, srcH int, srcFormat AvPixelFormat, dstW, dstH int, dstFormat AvPixelFormat,
+	flags int, srcFilter, dstFilter *SwsFilter, param *float64) *SwsContext {
+	return (*SwsContext)(C.sws_getCachedContext((*C.struct_SwsContext)(ctx),
+		C.int(srcW), C.int(srcH), (C.enum_AVPixelFormat)(srcFormat),
+		C.int(dstW), C.int(dstH), (C.enum_AVPixelFormat)(dstFormat),
+		C.int(flags), (*C.struct_SwsFilter)(srcFilter),
+		(*C.struct_SwsFilter)(dstFilter), (*C.double)(param)))
 }

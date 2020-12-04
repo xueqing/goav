@@ -12,20 +12,20 @@ package libswresample
 import "C"
 
 type (
-	Context        C.struct_SwrContext
-	Frame          C.struct_AVFrame
-	Class          C.struct_AVClass
+	SwrContext     C.struct_SwrContext
+	AvFrame        C.struct_AVFrame
+	AvClass        C.struct_AVClass
 	AvSampleFormat C.enum_AVSampleFormat
 )
 
 // SwrGetClass Get the Class for Context.
-func SwrGetClass() *Class {
-	return (*Class)(C.swr_get_class())
+func SwrGetClass() *AvClass {
+	return (*AvClass)(C.swr_get_class())
 }
 
 // SwrAlloc Context constructor functions.Allocate Context.
-func SwrAlloc() *Context {
-	return (*Context)(C.swr_alloc())
+func SwrAlloc() *SwrContext {
+	return (*SwrContext)(C.swr_alloc())
 }
 
 // SwresampleVersion Configuration accessors

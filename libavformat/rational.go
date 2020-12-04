@@ -8,6 +8,6 @@ package libavformat
 import "C"
 import "github.com/xueqing/goav/libavcodec"
 
-func newRational(r C.struct_AVRational) libavcodec.Rational {
-	return libavcodec.NewRational(int(r.num), int(r.den))
+func newAvRational(r C.struct_AVRational) libavcodec.AvRational {
+	return libavcodec.NewAvRational(int(r.num), int(r.den))
 }

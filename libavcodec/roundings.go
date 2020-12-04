@@ -15,7 +15,7 @@ const (
 	 * Flag telling rescaling functions to pass `INT64_MIN`/`MAX` through
 	 * unchanged, avoiding special cases for #AV_NOPTS_VALUE.
 	 *
-	 * Unlike other values of the enumeration AVRounding, this value is a
+	 * Unlike other values of the enumeration AvRounding, this value is a
 	 * bitmask that must be used in conjunction with another value of the
 	 * enumeration through a bitwise OR, in order to set behavior for normal
 	 * cases.

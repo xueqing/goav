@@ -6,13 +6,20 @@ package libavformat
 //#cgo pkg-config: libavformat
 //#include <libavformat/avformat.h>
 import "C"
+import "unsafe"
 
 //AvStreamGetParser Return parser
-func (s *Stream) AvStreamGetParser() *CodecParserContext {
-	return (*CodecParserContext)(C.av_stream_get_parser((*C.struct_AVStream)(s)))
+func (st *AvStream) AvStreamGetParser() *AvCodecParserContext {
+	return (*AvCodecParserContext)(C.av_stream_get_parser((*C.struct_AVStream)(st)))
 }
 
 // AvStreamGetEndPts Returns the pts of the last muxed packet + its duration.
-func (s *Stream) AvStreamGetEndPts() int64 {
-	return int64(C.av_stream_get_end_pts((*C.struct_AVStream)(s)))
+func (st *AvStream) AvStreamGetEndPts() int64 {
+	return int64(C.av_stream_get_end_pts((*C.struct_AVStream)(st)))
+}
+
+// AvStreamGetSideData Get side information from stream.
+func (st *AvStream) AvStreamGetSideData(typ AvPacketSideDataType, size int) *uint8 {
+	return (*uint8)(C.av_stream_get_side_data((*C.struct_AVStream)(st),
+		(C.enum_AVPacketSideDataType)(typ), (*C.int)(unsafe.Pointer(&size))))
 }
